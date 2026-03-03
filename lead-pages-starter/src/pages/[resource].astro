@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import ResourceLayout from '../layouts/ResourceLayout.astro';
+
+const { resource } = Astro.params;
+const resources = await getCollection('resources');
+const entry = resources.find((r) => r.id.replace(/\.md$/, '') === resource);
+
+if (!entry) {
+  return Astro.redirect('/');
+}
+
+const slug = entry.id.replace(/\.md$/, '');
+const { Content } = await entry.render();
+---
+
+<ResourceLayout
+  title={entry.data.title}
+  headline={entry.data.headline}
+  subtitle={entry.data.subtitle}
+  pdfUrl={entry.data.pdfUrl}
+  valueProps={entry.data.valueProps}
+  ctaText={entry.data.ctaText}
+  previewDescription={entry.data.previewDescription}
+  pages={entry.data.pages}
+  type={entry.data.type}
+  slug={slug}
+>
+  <Content />
+</ResourceLayout>

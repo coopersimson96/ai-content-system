@@ -1,0 +1,8 @@
+{
+  "workspace": "YOUR_WORKSPACE_NAME",
+  "hub_page_id": "YOUR_HUB_PAGE_ID",
+  "script_library_db_id": "YOUR_SCRIPT_LIBRARY_DB_ID",
+  "data_source_id": "YOUR_DATA_SOURCE_ID",
+  "inspiration_library_db_id": "YOUR_INSPIRATION_LIBRARY_DB_ID",
+  "inspiration_data_source_id": "YOUR_INSPIRATION_DATA_SOURCE_ID"
+}

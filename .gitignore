@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
+
+# Environment
+.env
+
+# Output
+output/
+
+# Node (for lead-pages-starter)
+node_modules/
+dist/
+.astro/
+.vercel/
