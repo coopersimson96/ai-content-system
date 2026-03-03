@@ -18,3 +18,4 @@ All notable changes to the AI Content System will be documented in this file.
 - Lead pages starter template (lead-pages-starter/)
 - Config templates for Notion, Google Docs, and Supadata
 - Shared scripts: gdocs_push.py, gdocs_formatter.py, gdrive_upload.py
+
