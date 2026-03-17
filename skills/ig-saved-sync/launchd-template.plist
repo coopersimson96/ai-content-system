@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.ig-saved-sync</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>cd "$HOME/ai-content-system/skills/ig-saved-sync" &amp;&amp; python3 ig-saved-sync.py run</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>23</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/ig-saved-sync-stderr.log</string>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/ig-saved-sync-stdout.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
