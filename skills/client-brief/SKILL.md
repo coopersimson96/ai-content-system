@@ -7,192 +7,148 @@ context: conversation
 
 # Client Brief Generator
 
-Generate a polished, interactive 2-page client proposal deployed to Vercel. Each brief consists of a high-level pitch page (`index.html`) and a detailed work plan/proposal page (`workplan.html`).
+Create professional client proposals in minutes instead of hours.
 
-## What It Does
+You hop on a discovery call with a potential client. You take notes. Then instead of spending 3 hours formatting a PDF, you run one command and get a polished, animated web proposal with a live URL you can text to them.
 
-Turn a discovery call transcript or project notes into a professional, interactive web-based proposal. No design tools needed. No PDF formatting headaches. Just run the skill and get a live URL you can send to clients.
-
-Each brief includes:
-- **Pitch page** (index.html) - Problem analysis, solution architecture, feature pipeline, ROI projections, implementation timeline
-- **Work plan** (workplan.html) - Detailed deliverables with accordion cards, SVG diagrams per deliverable, architecture map, investment CTA
-
-Every section has scroll-triggered animations, interactive SVG diagrams, and mobile-responsive layouts. Deployed to Vercel with noindex headers so it stays private.
+That's what this skill does.
 
 ---
 
-## Setup
+## What You Get
 
-### Requirements
-- Claude Code installed
-- Vercel CLI (`npm i -g vercel`) for deployment
-- Git installed
+Two web pages that make your services look premium:
 
-### Installation
+**Page 1: The Pitch** - Shows the client their problem, your solution, the ROI math, and your implementation plan. Includes animated charts, architecture diagrams, and a timeline.
+
+**Page 2: The Work Plan** - Every deliverable gets its own expandable card with a custom diagram. Plus an architecture map, rollout timeline, and a big "Let's Build This" button with your price.
+
+Both pages work on phones, tablets, and desktop. They have scroll animations, interactive diagrams, and stay private (hidden from Google).
+
+---
+
+## How to Install
+
+You need Claude Code already installed (Module 0 covers this).
+
+**Step 1:** Copy the skill folder to your skills directory:
 
 ```bash
-# Clone to your Claude Code skills directory
 cp -r client-brief ~/.claude/skills/client-brief
 ```
 
-No API keys needed. The skill generates static HTML files that work by opening directly in a browser.
+**Step 2 (optional):** If you want to put your proposals on a live URL, install Vercel:
+
+```bash
+npm i -g vercel
+```
+
+That's it. No API keys. No accounts to set up. No config files.
 
 ---
 
-## Usage
+## How to Use
 
-### Quick Start
+**Step 1:** Open Claude Code:
+
+```
+claude
+```
+
+**Step 2:** Run the skill with your client's name:
 
 ```
 /client-brief "Acme Corp content automation proposal"
 ```
 
-Or provide more context:
+**Step 3:** Answer the questions Claude asks you. Here's what it needs:
 
-```
-/client-brief
-```
-Then paste your discovery call transcript, project notes, or describe the project.
+| What Claude Asks | Example Answer |
+|---|---|
+| Client name | Acme Corp |
+| Contact person | Jane Smith |
+| Their industry | SaaS company, B2B marketing |
+| What you're building for them | Content automation system |
+| Which platforms | Instagram, TikTok, YouTube |
+| What you'll deliver | List each thing with a one-line description |
+| Your price | $4,500 |
+| Your name and email | Your Name, you@email.com |
+| Rollout phases | Phase 1: Setup, Phase 2: Launch, etc. |
+| What the client needs to give you | Logins, brand assets, content examples |
 
-### What You'll Be Asked For
+**Shortcut:** If you have a transcript from your discovery call, just paste the whole thing. Claude reads it and fills in the answers for you. It'll confirm before building anything.
 
-| Input | Required | Example |
-|-------|----------|---------|
-| Client/business name | Yes | Acme Corp |
-| Client contact name | Yes | Jane Smith |
-| Logo URL | No | CDN URL or skip |
-| Business type & industry | Yes | SaaS, B2B marketing |
-| What you're building | Yes | Content automation system |
-| Target platforms | Yes | Instagram, TikTok, YouTube |
-| Deliverables list | Yes | Title + 1-sentence summary each |
-| Investment amount | Yes | $4,500 |
-| Prepared by name + email | Yes | Your Name, you@email.com |
-| Rollout phases | Yes | Count + brief description each |
-| What client's team provides | Yes | Access, assets, brand guidelines |
-| Future phase / upsell features | No | Premium add-ons |
+**Step 4:** Claude generates two HTML files and opens them in your browser. Check that everything looks right.
 
-If you provide a transcript or detailed notes, the skill extracts these automatically and confirms before generating.
+**Step 5:** Claude deploys to Vercel and gives you a live URL. Send it to your client.
 
 ---
 
-## Configuration
+## Changing the Colors
 
-### Theme Customization
+The proposals come with a clean default look (cream background, teal and copper accents). To match your own brand:
 
-The default color palette uses a clean, professional theme:
+1. Open the generated `index.html` file
+2. Find the `colors` section near the top (around line 15)
+3. Swap the color codes for your brand colors
+4. Save and refresh the browser
 
-```javascript
-// In the generated HTML's tailwind.config
-colors: {
-  cream: '#FAF9F6',        // Background
-  charcoal: '#2D2D2D',     // Dark sections & text
-  teal: '#2A9D8F',         // Primary accent
-  copper: '#B87333',       // Secondary accent
-}
-```
+Do the same for `workplan.html`.
 
-To customize for your brand, edit these values in the `tailwind.config` block inside each generated HTML file. The skill uses Tailwind CDN, so any Tailwind color utility works.
-
-### Font
-
-Default: Inter (Google Fonts CDN). Change by editing the `<link>` tag and `fontFamily` in the tailwind config.
+No special tools needed. Just edit, save, refresh.
 
 ---
 
-## Output Structure
+## What the Proposal Includes
 
-```
-~/Desktop/AI Projects/{kebab-client-name}-brief/
-├── index.html      # High-level pitch page
-├── workplan.html   # Detailed proposal with deliverables
-└── vercel.json     # noindex deployment config
-```
+### Pitch Page
+- Navigation bar that follows you as you scroll
+- Hero section with key stats about the project
+- Time audit showing where the client wastes hours
+- Architecture diagram of your solution
+- Feature cards with "time saved" badges
+- ROI comparison (before vs. after)
+- Implementation timeline
+- Next steps
 
-### Pitch Page (index.html) Sections
+### Work Plan Page
+- Client logo (if you have a URL for it)
+- Project details (who, what, when, how much)
+- Expandable deliverable cards - click one to see the details and diagram, click another and the first one closes
+- Architecture map you can hover over to see how pieces connect
+- Rollout timeline
+- What the client needs to provide
+- Big pricing section with a call-to-action
 
-1. **Sticky nav** - Section links with active state tracking
-2. **Hero** - Dark background, animated badge, stat cards, dual CTAs
-3. **Problem: Time Audit** - Horizontal bar charts showing current time breakdown with automation priority badges
-4. **Solution: Architecture** - 3-layer SVG diagram (dashboard, backend, data)
-5. **Features: Content Pipeline** - Pipeline flow SVG + feature cards with time-saved badges
-6. **ROI: Time Savings** - Before/after comparison + animated donut chart
-7. **Phases: Implementation** - Vertical timeline with phase cards
-8. **Deployment Steps** - 5-column numbered steps
-9. **Footer** - Contact email
-
-### Work Plan Page (workplan.html) Sections
-
-1. **Logo banner** - Client logo (skipped if no URL)
-2. **Hero** - Project info grid (prepared for/by, date, investment, scope)
-3. **Deliverables** - Interactive accordion cards (one open at a time), each with inline SVG diagram
-4. **Dashboard Preview** - 3 SVG wireframes showing the product in practice
-5. **System Architecture** - Interactive node diagram with hover/tap tooltips
-6. **Future Phase** - Dimmed expansion features
-7. **Rollout Timeline** - Phase pills with descriptions
-8. **What Your Team Provides** - Clean bullet list
-9. **How We Work Together** - Communication and revision process
-10. **Investment CTA** - Large card with amount and included items
-11. **Footer** - Contact info
+Every single deliverable gets its own custom diagram. Not stock images. Diagrams that actually show how that specific feature works.
 
 ---
 
-## Interactive Features
+## Common Questions
 
-### Accordion Deliverables
-Each deliverable is a clickable card that expands to show:
-- Plain-language description of what it does and why it matters
-- Inline SVG diagram specific to that deliverable
-- "What's included" or "How it works" bullet list
-- Optional callout box and wireframe preview
+**Do I need Vercel?**
+No. The files work by just opening them in your browser. Vercel gives you a live URL to share, but you can use any hosting (Netlify, GitHub Pages, etc.) or just email the files.
 
-Only one card opens at a time to keep the page scannable.
+**Can clients find my proposals on Google?**
+No. Every proposal has headers that tell Google not to index it. Only people with the direct link can see it.
 
-### SVG Diagram Types
-The skill selects the right diagram type per deliverable:
+**Can I edit the proposal after it's generated?**
+Yes. The files are plain HTML. Open them in any text editor, make changes, save, and refresh your browser.
 
-| Deliverable Type | Diagram Style |
-|-----------------|---------------|
-| Pipeline/process | Horizontal flow: boxes and arrows |
-| UI feature | Wireframe card: content layouts, forms |
-| Data sync/integration | Bidirectional arrows between systems |
-| Analytics/reporting | Chart wireframe: bars, metrics, tabs |
-| Content generation | Carousel/slide wireframes |
-| Architecture/infra | Node map with connections |
+**What if I don't have a discovery call transcript?**
+No problem. Just answer Claude's questions one at a time. The transcript shortcut is faster but not required.
 
-### Scroll Animations
-Every section uses IntersectionObserver for fade-up animations. Bar charts and donut charts animate on scroll entry.
+**Can I use this for any type of service?**
+Yes. The skill works for any service-based proposal - web development, content creation, consulting, design, marketing, automation. Claude adapts the diagrams and language to match your industry.
 
-### Architecture Tooltips
-Desktop: hover to highlight connection lines and show tooltips. Mobile: tap to toggle.
-
----
-
-## Deployment
-
-The skill automatically:
-1. Initializes a git repo in the project directory
-2. Deploys to Vercel with `--prod --yes`
-3. Returns live URLs for both pages
-
-The `vercel.json` adds `X-Robots-Tag: noindex, nofollow` headers so client briefs stay private and out of search results.
-
----
-
-## Design Rules
-
-1. **No build step** - Tailwind CDN + vanilla JS only. Files work by opening in a browser.
-2. **Mobile-first** - Every SVG uses `viewBox`, every layout stacks on mobile, touch targets are 44px minimum.
-3. **Every deliverable gets an SVG diagram** - No exceptions. Visually explains how the feature works.
-4. **Non-technical language** - The client is not a developer. No code references or tech jargon (unless the client is technical).
-5. **noindex/nofollow** - Client briefs never appear in search results.
-6. **Concrete numbers over vague claims** - "saves 16 hours/week" not "saves significant time."
+**What if I mess something up?**
+Run the skill again. It creates a fresh set of files each time. Your old version stays in its folder.
 
 ---
 
 ## Tips
 
-- **From a transcript**: Paste the full discovery call transcript. The skill extracts client needs, pain points, and project scope automatically.
-- **Quick iteration**: Edit the generated HTML directly and refresh the browser. No build step needed.
-- **Custom branding**: Swap the color palette in the tailwind config to match your agency's brand.
-- **Multiple revisions**: Re-run the skill with updated inputs. It creates a fresh set of files each time.
-- **Without Vercel**: The HTML files work locally. Just open in a browser and share via any static hosting.
+- **Longer notes = better proposals.** The more detail you give Claude about the project, the more specific and impressive the deliverables will be.
+- **Include your price in the notes.** Claude builds ROI projections around your investment number.
+- **Have a logo URL?** Drop it in. The work plan page puts it at the top. No logo? It skips that section cleanly.
+- **Review the diagrams.** Each deliverable gets a custom diagram. Make sure they match what you're actually building before sending to the client.
