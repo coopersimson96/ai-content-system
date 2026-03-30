@@ -289,7 +289,7 @@ Every hook anchors on a specific number or claim. Never vague.
 2. Specific > General - use concrete numbers, not vague claims
 3. Real example prompts in quotes as body text
 4. Each slide ends with unresolved tension that makes the next slide necessary
-5. CTA references the value prop clearly
+5. **CTA MUST include a comment keyword** - The final slide always uses the `cta` component type with a specific keyword. "Comment KEYWORD below" with what they'll get. Never just "get the guide" without telling them how. The keyword box is the hand raiser trigger.
 
 ---
 
@@ -305,6 +305,7 @@ Every hook anchors on a specific number or claim. Never vague.
 8. Every numbered list title gets one `*accent keyword*` highlight.
 9. Delete previous slide versions before rendering new ones.
 10. Auto-open slides in Preview after rendering (if brand.json allows).
+11. **The final slide MUST include a CTA component with a comment keyword.** Every carousel needs to tell people exactly how to claim the resource. Use `{"type": "cta", "keyword": "KEYWORD", "subtitle": "I'll DM you the full guide."}` in the final slide's components array. The keyword should be a single memorable word related to the topic (e.g., "CAROUSEL", "DEMO", "SEO"). Never leave the final slide with an empty components array. Never just say "get the guide" without telling them to comment the keyword.
 
 ---
 
