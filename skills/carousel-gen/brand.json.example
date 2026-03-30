@@ -1,0 +1,24 @@
+{
+  "handle": "@your.handle",
+  "brand_name": "Your Brand",
+  "niche": "your niche (e.g., AI tools, fitness, marketing, business)",
+  "accent_colors": {
+    "primary": "#2D7DD2",
+    "secondary": "#E63946",
+    "tertiary": "#FF6B35"
+  },
+  "background_tone": "#F2F0EB",
+  "typography": {
+    "headline": "Montserrat",
+    "body": "DM Sans",
+    "accent": "Source Serif Pro",
+    "code": "JetBrains Mono"
+  },
+  "cta_format": "comment_keyword",
+  "cta_template": "Comment {keyword} below and I'll send it to you.",
+  "lead_magnet_platform": "direct_download",
+  "max_slides": 5,
+  "hook_preference": "curiosity_gap",
+  "content_depth": "teaser",
+  "auto_open_preview": true
+}
