@@ -1,0 +1,20 @@
+# Secrets - never commit
+.env
+
+# Local state directories
+/tmp/beehiiv-playwright-state/
+.playwright-session/
+.pw-beehiiv-session/
+
+# Generated drafts (personal content)
+drafts/
+__pycache__/
+*.pyc
+
+# Lead CSVs (may contain PII)
+leads_*.csv
+*.csv
+
+# Test outputs
+test_email.html
+_beehiiv_results.json
