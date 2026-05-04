@@ -1,0 +1,25 @@
+{
+  "name": "ig-analytics-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "smoke-test": "node --env-file=.env.local --experimental-strip-types --no-warnings scripts/smoke-test.ts",
+    "backfill": "node --env-file=.env.local --experimental-strip-types --no-warnings scripts/backfill-90-days.ts",
+    "refresh-account": "node --env-file=.env.local --experimental-strip-types --no-warnings scripts/refresh-account-daily.ts",
+    "remirror": "node --env-file=.env.local --experimental-strip-types --no-warnings scripts/remirror-notion.ts",
+    "assess": "node --env-file=.env.local --experimental-strip-types --no-warnings scripts/assess-performance.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.91.1",
+    "@notionhq/client": "^5.14.0",
+    "@supabase/supabase-js": "^2.104.1",
+    "date-fns": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

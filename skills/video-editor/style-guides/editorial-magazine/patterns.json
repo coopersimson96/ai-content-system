@@ -1,0 +1,333 @@
+{
+  "archetype_id": "editorial-magazine",
+  "version": "0.1.0",
+  "version_date": "2026-04-25",
+  "description": "9:16 magazine-spread reel. Hard horizontal split (top editorial card / bottom naturally-graded speaker), classical display serif, italic-serif single-word captions, numbered rows with one-row color-break flagging the exception, slow 2.5-4.0s dwell per spread, crossfade or black-bezel-breath transitions. Print-quarterly register: paper-cream pages, hairline rules, tracked-out small-caps mastheads, no whips, no chrome, no neon.",
+  "duration_range_s": [50, 90],
+  "brand_spec": "../BRAND.md.example",
+  "style_decon": "./STYLE_DECON.md",
+  "fits_script_when": [
+    "script reads as an essay, framework explanation, or curated breakdown rather than a hot-take or a comedy reel",
+    "speaker is on a locked-down podcast/desk/kitchen-counter plate (NOT walking-and-talking, NOT pure voiceover)",
+    "topic benefits from chapter-style framing — multiple 'pieces' or 'sections' that each get their own dwell beat",
+    "tone is considered, slower-paced, instructive — viewer is meant to read on-screen text, not just hear narration",
+    "script enumerates a list of N items where ONE item is the exception, the winner, or the answer the rest sets up",
+    "total duration is 50-90 seconds (the dwell math doesn't support shorter reels)",
+    "the speaker's environment (real kitchen, plants, a Røde mic, hoodie, framed art) is part of the credibility",
+    "ends with a low-key italic-serif comment-keyword CTA, not a hype call-to-action"
+  ],
+  "does_not_fit_when": [
+    "speaker is walking-and-talking outdoors or in motion (split format requires a locked plate)",
+    "script is comedy, reaction, or hype-energy (the 2.5-4.0s dwell breaks the format)",
+    "video is under 30 seconds (dwell math collapses)",
+    "script is a tool-by-tool list of SaaS products with logos and concept demos (use sage-stack instead)",
+    "live screen recording of an actual app is essential to the explanation (use screen-face-split)",
+    "ad-style headline + product surface required (use screen-face-split)",
+    "topic demands kinetic, whip-cut, B-roll-heavy energy (any whip transition breaks the editorial register)"
+  ],
+  "default_fallback_pattern_id": "caption-only-italic",
+  "patterns": [
+    {
+      "id": "issue-masthead-opener",
+      "name": "Issue masthead opening spread",
+      "description": "Opening 2-4s spread that frames the reel as a magazine article. Cream card slides in from the top of the bezel with a tracked-out small-caps masthead ('ISSUE 01 · THE HARNESS · APR 2026'), thin black hairline rule below, then a serif headline pair lands underneath. Establishes 'you are reading something curated' before any narration content begins.",
+      "scene_type": "hook",
+      "unique_per_video": true,
+      "duration_s": [2.0, 4.0],
+      "position": {"constraint": "first-N-seconds", "value": 5.0},
+      "trigger": {
+        "script_signal": "the opening line of the script frames the topic as a piece of considered writing — declarative noun phrase, often introducing a theme ('the agent harness', 'context engineering', 'five things around a model') that the rest of the reel will unpack",
+        "regex_hint": "^(here'?s|the|five|three|four|six|seven|let'?s talk about|today|this is)"
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black", "--primary-mid"],
+      "hyperframes": {
+        "blocks": ["grain-overlay"],
+        "html_template": "templates/issue-masthead-opener.html",
+        "css_template": "templates/issue-masthead-opener.css",
+        "js_template": "templates/issue-masthead-opener.js"
+      },
+      "params": {
+        "issue_label": {"type": "string", "default": "ISSUE 01", "description": "Left masthead segment, tracked-out small-caps", "required": true},
+        "issue_topic": {"type": "string", "description": "Middle masthead segment naming the theme (e.g. 'THE HARNESS', 'THE LOOP')", "required": true},
+        "issue_date": {"type": "string", "description": "Right masthead segment with month + year (e.g. 'APR 2026')", "required": true},
+        "headline_upright": {"type": "string", "description": "Voice A — structural words of the headline pair (e.g. 'Five')", "required": true},
+        "headline_italic": {"type": "string", "description": "Voice B — italic emphasis word inside the headline (e.g. 'things')", "required": true},
+        "headline_tail": {"type": "string", "default": "", "description": "Optional trailing words after the italic (e.g. 'around a model')", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "2.0-4.5s", "note": "Masthead 'ISSUE 03 · THE LOOP · APR 2026' slides in from top, hairline rule, then headline pair builds underneath"},
+        {"reel": "DXfzt-cADuO", "timestamp": "4.5-8.0s", "note": "Headline pair completes — 'Five things around a model' with italic 'things'"}
+      ]
+    },
+    {
+      "id": "numbered-list-with-row-break",
+      "name": "Numbered rows with one row breaking the underline color",
+      "description": "THE signature pattern. A cream card holds 3-5 rows, each with [italic numeral] [serif word] [tracked-out grey subtitle] [thin colored underline]. All underlines land in --primary-mid first; then ONE row crossfades to --accent-warm and gets a small '↳ THE EXCEPTION' (or 'THE ANSWER' / 'THE WINNER') tag beside it. The exception swap is timed to the speaker's 'but', 'except', 'unless' or equivalent.",
+      "scene_type": "list-preview",
+      "unique_per_video": true,
+      "duration_s": [4.0, 7.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker enumerates a list of N items (N=3-5) where one item is positioned as the exception, the winner, the answer, or the punchline that the rest sets up. Often phrased as 'the X things... but the real one is Y' or 'X options... only one of them actually Z'",
+        "regex_hint": "(but|except|unless|the (real|actual|winning|right|true|exception|answer)|only one|the one that)"
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black", "--primary-mid", "--accent-warm"],
+      "hyperframes": {
+        "blocks": ["grain-overlay"],
+        "html_template": "templates/numbered-list-with-row-break.html",
+        "css_template": "templates/numbered-list-with-row-break.css",
+        "js_template": "templates/numbered-list-with-row-break.js"
+      },
+      "params": {
+        "rows": {"type": "string", "description": "JSON-stringified array of row objects: [{num:'01', word:'Loop', sub:'one instruction at a time'}, ...]. 3-5 rows.", "required": true},
+        "exception_index": {"type": "number", "description": "Zero-based index of the row whose underline swaps to --accent-warm. Usually the last or second-to-last row.", "required": true},
+        "exception_tag": {"type": "string", "default": "THE EXCEPTION", "description": "Small-caps grey tag that appears beside the broken row (e.g. 'THE EXCEPTION', 'THE ANSWER', 'THE WINNER')", "required": false},
+        "exception_swap_offset_s": {"type": "number", "default": 2.5, "description": "Seconds after pattern start when the exception row's underline crossfades. Time this to the speaker's 'but'/'except'.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "11.5-16.0s", "note": "5 rows (Loop / Tools / Memory / Context / Control) cascade with lime underlines"},
+        {"reel": "DXfzt-cADuO", "timestamp": "16.0-18.5s", "note": "Row 04 underline crossfades from lime to orange, '↳ THE EXCEPTION' tag enters from left"}
+      ]
+    },
+    {
+      "id": "section-header-italic-emphasis",
+      "name": "Two-voice serif section header with hairline rule",
+      "description": "Marks the start of a new piece/section inside the magazine. Tracked-out small-caps masthead label ('PIECE 01 · THE LOOP', '↳ GO DEEPER') appears, hairline rule scales in below it, then a big serif headline pair lands — Voice A upright + Voice B italic emphasis word — with another hairline rule beneath. ~1.5-2.0s total.",
+      "scene_type": "section-header",
+      "unique_per_video": false,
+      "duration_s": [1.5, 2.5],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker transitions into a new section, often with phrasing like 'piece two', 'next is X', 'the second thing is', 'first, the X', 'and then there's', or an explicit chapter-style cue",
+        "regex_hint": "^(first|second|third|fourth|fifth|next|now|then there'?s|piece (one|two|three|\\d+)|number \\d+|and then|finally|let'?s talk about)"
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black", "--primary-mid"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/section-header-italic-emphasis.html",
+        "css_template": "templates/section-header-italic-emphasis.css",
+        "js_template": "templates/section-header-italic-emphasis.js"
+      },
+      "params": {
+        "masthead_text": {"type": "string", "description": "Tracked-out small-caps label above the headline (e.g. 'PIECE 01 · THE LOOP', '↳ GO DEEPER')", "required": true},
+        "headline_upright": {"type": "string", "description": "Voice A structural words (e.g. 'One', 'First, the')", "required": true},
+        "headline_italic": {"type": "string", "description": "Voice B italic emphasis word/phrase (e.g. 'instruction', 'agent harness')", "required": true},
+        "headline_tail": {"type": "string", "default": "", "description": "Optional trailing upright words (e.g. 'at a time')", "required": false},
+        "rule_position": {"type": "string", "default": "both", "description": "Where the hairline rules sit: 'above' | 'below' | 'both'", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "8.0-11.5s", "note": "'PIECE 01 · THE LOOP' masthead, hairline, big serif 'Loop' word with subtitle"},
+        {"reel": "DXfzt-cADuO", "timestamp": "66.0-73.0s", "note": "'↳ GO DEEPER' masthead opens the closing recap section"}
+      ]
+    },
+    {
+      "id": "hero-pull-quote",
+      "name": "Hero editorial pull-quote",
+      "description": "Massive italic serif pull-quote (~64-88px) occupies the top half cream card with a thin hairline rule above and below. Attribution appears in tracked-out small-caps grey beneath. Reads as 'a magazine quote loaded onto the page' — fades in as one element, no per-word stagger. Held with breath. Lands once per reel as the rhetorical landing.",
+      "scene_type": "claim",
+      "unique_per_video": true,
+      "duration_s": [3.0, 6.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker delivers a single quotable sentence that summarizes the thesis or names a sharp distinction — short, declarative, no list, no qualification ('it's not a tool, it's a teammate', 'the loop is the product')",
+        "regex_hint": "(it'?s not (a|an|just) [\\w\\s]+,? it'?s|the (real|whole) (point|thing|trick|secret) is|here'?s the truth)"
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black", "--primary-mid"],
+      "hyperframes": {
+        "blocks": ["flash-through-white", "grain-overlay"],
+        "html_template": "templates/hero-pull-quote.html",
+        "css_template": "templates/hero-pull-quote.css",
+        "js_template": "templates/hero-pull-quote.js"
+      },
+      "params": {
+        "quote_text": {"type": "string", "description": "The quoted sentence in italic serif. Keep under ~14 words.", "required": true},
+        "attribution": {"type": "string", "default": "", "description": "Optional small-caps grey attribution line below", "required": false},
+        "use_flash_landing": {"type": "boolean", "default": false, "description": "If true, precede the quote with a 0.25s flash-through-white. Use sparingly, max 1x per reel.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "36.5-42.0s", "note": "'It's not a tool. It's a teammate.' italic pull-quote with small-caps attribution beneath"}
+      ]
+    },
+    {
+      "id": "code-block-window",
+      "name": "Geist Mono code block on cream card",
+      "description": "Light card-within-card sitting on the cream page. Geist Mono (or Roboto Mono / JetBrains Mono) at ~16-22px, dark grey text on a slightly cooler off-white panel (~#f8f6ee). No syntax highlighting beyond grey — purposely undecorated, reads as 'a snippet from the editor, dropped onto the page'.",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [2.5, 5.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker references actual code, a config snippet, a terminal command, or JSON output — the on-page artifact is text the viewer is meant to read literally",
+        "regex_hint": "(code|JSON|config|terminal|command|snippet|five lines|one line|here'?s the (code|config|prompt))"
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black"],
+      "hyperframes": {
+        "blocks": ["grain-overlay"],
+        "html_template": "templates/code-block-window.html",
+        "css_template": "templates/code-block-window.css",
+        "js_template": "templates/code-block-window.js"
+      },
+      "params": {
+        "code_text": {"type": "string", "description": "The literal text content rendered in monospace. Preserve indentation. Keep under ~8 lines.", "required": true},
+        "language_label": {"type": "string", "default": "", "description": "Optional small-caps grey label above the block (e.g. 'TS', 'JSON', 'BASH')", "required": false},
+        "panel_tint": {"type": "string", "default": "warm-off-white", "description": "Background of the code panel: 'warm-off-white' | 'cream-shade' (slightly darker than the page)", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "18.5-22.0s", "note": "Geist Mono code block on cream card, no syntax highlighting, dark grey monospace"}
+      ]
+    },
+    {
+      "id": "fake-ui-mock",
+      "name": "Fake-UI window inside cream card",
+      "description": "A light-mode software-window mockup sits on the cream page — chrome dots, optional title bar, content area styled as a chat, list, dashboard, form, or app surface. Soft 16px drop shadow, slight rounded corners (~14px), occasional 4-8deg tilt for 3D presence.",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [3.0, 6.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker references a specific UI surface — an app screenshot, a Notion template, a chat window, a form, a dashboard — and the on-page content needs to look like that surface even though no live recording exists",
+        "regex_hint": "(app|window|dashboard|chat|form|template|interface|UI|panel|sidebar|tab|Notion|Cursor|Claude|Figma)"
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black", "--primary-mid"],
+      "hyperframes": {
+        "blocks": ["app-showcase", "grain-overlay"],
+        "html_template": "templates/fake-ui-mock.html",
+        "css_template": "templates/fake-ui-mock.css",
+        "js_template": "templates/fake-ui-mock.js"
+      },
+      "params": {
+        "ui_type": {"type": "string", "default": "app-window", "description": "Layout family: 'app-window' | 'chat-thread' | 'list-rows' | 'dashboard' | 'form-fields' | 'tablet-mockup'", "required": true},
+        "content": {"type": "string", "description": "The literal text/structure to render inside the UI. Format depends on ui_type.", "required": true},
+        "tilt_deg": {"type": "number", "default": 0, "description": "Optional rotateY tilt for 3D presence (0-8deg). Default 0 = flat on page.", "required": false},
+        "tint_swatch_token": {"type": "color-token", "default": "--primary-mid", "description": "Optional accent inside the UI (button color, highlight bar) — must reference a brand token", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "22.0-26.0s", "note": "Light Cursor / Claude Code window screenshot floats on cream page, 16px drop shadow"},
+        {"reel": "DXfzt-cADuO", "timestamp": "48.0-54.0s", "note": "Cream form mockup with topic field, radio chips, slider, swatch palette at bottom"},
+        {"reel": "DXQnnFHgBUN", "timestamp": "various", "note": "Notion templates rendered as light-card UI inside the editorial spread"}
+      ]
+    },
+    {
+      "id": "speaker-with-italic-caption",
+      "name": "Speaker visible with italic-serif single-word caption",
+      "description": "The bottom-half speaker plate runs continuously through every spread. This pattern names the per-beat caption layer that floats over the speaker's torso ~1/3 from top of the bottom half: a single italic-serif white word, ~52-64px, with soft 6-8px black drop shadow, no pill background, no all-caps.",
+      "scene_type": "caption-only",
+      "unique_per_video": false,
+      "duration_s": [0.6, 1.5],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker hits an emphatic word inside a sentence — typically the noun or verb that carries the meaning of the beat, often the same word that appears on the top-half page (meta-moment alignment)",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--background-paper", "--primary-mid", "--anchor-near-black"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/speaker-with-italic-caption.html",
+        "css_template": "templates/speaker-with-italic-caption.css",
+        "js_template": "templates/speaker-with-italic-caption.js"
+      },
+      "params": {
+        "word_text": {"type": "string", "description": "The single italic-serif word to display. Keep to one word (occasionally two if grammatically tight).", "required": true},
+        "emphasis_token": {"type": "color-token", "default": "--primary-mid", "description": "Optional brand color for the word. Default white; swap to --primary-mid to match a top-half emphasis.", "required": false},
+        "vertical_position": {"type": "string", "default": "third-from-top", "description": "Where the caption sits in the bottom half: 'third-from-top' | 'centered' | 'lower-third'", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "16.0-18.5s", "note": "italic 'different' lands as the exception row underline crossfades to orange"},
+        {"reel": "DXfzt-cADuO", "timestamp": "32.0-36.5s", "note": "italic 'that' over speaker as flowchart diagram is held above"},
+        {"reel": "DXZT5rqDAR8", "timestamp": "0.6-1.8s", "note": "italic 'absolutely' enters mid-shot, holds 1.2s, fades"}
+      ]
+    },
+    {
+      "id": "crossfade-or-bezel-breath-transition",
+      "name": "Crossfade or black-bezel-breath spread transition",
+      "description": "How the format moves between two editorial spreads. Two flavors: (1) plain GSAP opacity crossfade ~0.4s power2.inOut between two cream cards while the bottom-half speaker plays continuously; (2) black-bezel breath — the cream card fades out over the bezel, the top half holds pure black for 200-400ms, then the next card slides in from the top with expo.out. Never a whip, never a directional blur, never a hard cut between two cream cards.",
+      "scene_type": "transition",
+      "unique_per_video": false,
+      "duration_s": [0.25, 0.7],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "transition between two spreads — the speaker continues talking but the editorial top half needs to swap. Used between every piece of the magazine.",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/crossfade-or-bezel-breath-transition.html",
+        "css_template": "templates/crossfade-or-bezel-breath-transition.css",
+        "js_template": "templates/crossfade-or-bezel-breath-transition.js"
+      },
+      "params": {
+        "transition_type": {"type": "string", "default": "crossfade", "description": "'crossfade' (0.4s opacity, default 70% of cases) | 'bezel-breath' (fade out + 200-400ms black hold + slide-in)", "required": true},
+        "breath_duration_s": {"type": "number", "default": 0.3, "description": "If transition_type=bezel-breath, how long the black hold is (0.2-0.4s)", "required": false},
+        "ease": {"type": "string", "default": "power2.inOut", "description": "GSAP easing. 'power2.inOut' for crossfades, 'expo.out' for slide-ins. Never bounce/elastic/back.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "11.5s, 18.5s, 22.0s, 26.0s", "note": "Crossfades between piece spreads — bottom-half speaker continuous"},
+        {"reel": "DXfzt-cADuO", "timestamp": "between pieces 2 and 3", "note": "Black-bezel breath ~300ms before the next cream card slides in from top"}
+      ]
+    },
+    {
+      "id": "comment-cta-closer",
+      "name": "Two-voice serif comment-keyword closer",
+      "description": "Final 2-3s of the reel. Cream card centered with a thin hairline rule above and below: Voice A upright serif 'comment' + Voice B italic-serif quoted keyword (e.g. 'the loop'). Speaker may smile under the bezel. Held to the end. Same shape as sage-stack's comment-CTA but rendered in editorial-magazine's paper-page register.",
+      "scene_type": "cta",
+      "unique_per_video": true,
+      "duration_s": [2.0, 3.5],
+      "position": {"constraint": "last-N-seconds", "value": 4.0},
+      "trigger": {
+        "script_signal": "speaker explicitly asks viewer to comment a keyword to receive something (a doc, a guide, a DM, the script, the template)",
+        "regex_hint": "(comment|drop|leave|reply with)\\s+['\"\\u201c]?[A-Za-z][\\w\\s]*['\"\\u201d]?"
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black", "--primary-mid"],
+      "hyperframes": {
+        "blocks": ["grain-overlay"],
+        "html_template": "templates/comment-cta-closer.html",
+        "css_template": "templates/comment-cta-closer.css",
+        "js_template": "templates/comment-cta-closer.js"
+      },
+      "params": {
+        "verb_text": {"type": "string", "default": "comment", "description": "Voice A action verb in upright serif (e.g. 'comment', 'reply')", "required": true},
+        "keyword_text": {"type": "string", "description": "Voice B italic-serif keyword in quotes (e.g. 'the loop', 'harness', 'stack')", "required": true},
+        "show_quotes": {"type": "boolean", "default": true, "description": "Whether to wrap keyword_text in curly serif quotes", "required": false}
+      },
+      "examples": [
+        {"reel": "DXfzt-cADuO", "timestamp": "73.0-77.0s", "note": "Cream card: 'comment' upright + italic 'the loop' centered, hairline above and below"}
+      ]
+    },
+    {
+      "id": "caption-only-italic",
+      "name": "Italic-serif single-word caption (default fallback)",
+      "description": "When no other pattern matches a beat, this is the safety net. Single italic-serif white word over the speaker's torso — same visual as speaker-with-italic-caption but no top-half editorial spread above. Used for connector beats, simple claims, transitions without dedicated patterns.",
+      "scene_type": "caption-only",
+      "unique_per_video": false,
+      "duration_s": [0.5, 8.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "fallback when no other pattern scores above 0.5",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--primary-mid", "--background-paper"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/caption-only-italic.html",
+        "css_template": "templates/caption-only-italic.css",
+        "js_template": "templates/caption-only-italic.js"
+      },
+      "params": {
+        "emphasis_words": {"type": "string", "default": "", "description": "Comma-separated list of words to highlight in --primary-mid (rest stay white). Default: no recoloring, all white italic.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXZT5rqDAR8", "timestamp": "various", "note": "Full-frame talking head with italic-serif single-word captions throughout — the format reduced to its caption layer"},
+        {"reel": "DXfzt-cADuO", "timestamp": "various", "note": "Continuous caption layer running under all editorial spreads"}
+      ]
+    }
+  ],
+  "open_questions": [
+    "Should fake-ui-mock be split into separate patterns per ui_type? Each has different layout needs and different trigger language. Defer to v0.2 once you have more example reels.",
+    "The 'flowchart diagram' beat only appears once. Could become its own pattern (hand-drawn-diagram) but needs a second example.",
+    "Reel A uses white-on-black-pill all-caps captions for HOOK lines on the full-frame talking-head variant. Could be its own hook-pill-caption pattern.",
+    "The big-stat card beat (single large numeral mid-page) is structurally similar to hero-pull-quote but renders a number/stat. Could be its own stat-card pattern. For v0.1, fold into hero-pull-quote.",
+    "Light-leak warm-tint transition is a sub-variant of crossfade-or-bezel-breath-transition.",
+    "crossfade-or-bezel-breath-transition is technically two transitions sharing a pattern. Watch for whether the planner can pick the right transition_type from script signal alone."
+  ]
+}

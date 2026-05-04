@@ -1,0 +1,294 @@
+/**
+ * Performance assessment: classifies each ig_media row by tier (outlier /
+ * average / underperformer / untested) and writes a Claude-generated note
+ * explaining WHY it landed there. Output goes to ig_media columns and the
+ * Notion analytics DB.
+ *
+ * Tier comes from the SQL view `ig_media_tiered` (NTILE(5) on views, posts
+ * <48h are 'untested').
+ *
+ * Notes generation: Claude API call per post, prompt-cached system block.
+ * Skips rows where manual_notes_override=true. Skips rows whose stored tier
+ * matches the computed tier AND notes are <7 days old AND tier hasn't changed.
+ *
+ * Run from repo root:
+ *   node --env-file=.env.local --experimental-strip-types --no-warnings \
+ *     scripts/assess-performance.ts
+ *
+ * Optional flags:
+ *   --force        Re-assess all posts even if notes are fresh
+ *   --limit=N      Only process the first N posts
+ *   --dry-run      Compute tiers + draft notes but don't write to DB/Notion
+ *
+ * --------------------------------------------------------------------------
+ * SETUP NOTE: This file is a TEMPLATE. The SYSTEM_PROMPT below loads from
+ * `prompts/creative-director-routine.md`, which contains {{CREATOR_NAME}},
+ * {{CREATOR_NICHE}}, and {{CREATOR_AUDIENCE}} variables. Fill those in for
+ * your own niche before running. See the SKILL.md "Daily routine" section.
+ * --------------------------------------------------------------------------
+ */
+import Anthropic from "@anthropic-ai/sdk";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
+import { getSupabaseAdmin } from "../src/lib/supabase.ts";
+import {
+  findAnalyticsPageByMediaId,
+  upsertAnalyticsPage,
+} from "../src/lib/notion-analytics.ts";
+
+const MODEL = "claude-sonnet-4-6";
+const STALE_DAYS = 7;
+
+interface TieredRow {
+  id: string;
+  ig_url: string;
+  posted_at: string;
+  media_type: string;
+  media_product_type: string;
+  caption: string | null;
+  notion_script_id: string | null;
+  stored_tier: string | null;
+  performance_notes: string | null;
+  notes_assessed_at: string | null;
+  manual_notes_override: boolean;
+  views: number;
+  reach: number | null;
+  total_interactions: number | null;
+  avg_watch_time_ms: number | null;
+  reels_skip_rate: number | null;
+  latest_snapshot_at: string | null;
+  computed_tier: string;
+  median_views: number;
+  median_reach: number;
+  median_interactions: number;
+  median_watch_ms: number;
+}
+
+const TIER_LABEL: Record<string, "Outlier" | "Average" | "Underperformer" | "Untested"> = {
+  outlier: "Outlier",
+  average: "Average",
+  underperformer: "Underperformer",
+  untested: "Untested",
+};
+
+function args() {
+  const force = process.argv.includes("--force");
+  const dryRun = process.argv.includes("--dry-run");
+  const limitFlag = process.argv.find((a) => a.startsWith("--limit="));
+  const limit = limitFlag ? Number(limitFlag.split("=")[1]) : undefined;
+  return { force, dryRun, limit };
+}
+
+// Load the system prompt template from disk and apply env-var substitutions.
+// Template lives at prompts/creative-director-routine.md and uses {{VARS}}.
+function loadSystemPrompt(): string {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const promptPath = resolve(here, "../prompts/creative-director-routine.md");
+  let prompt = readFileSync(promptPath, "utf-8");
+
+  const vars: Record<string, string> = {
+    CREATOR_NAME: process.env.CREATOR_NAME ?? "the creator",
+    CREATOR_NICHE: process.env.CREATOR_NICHE ?? "their niche",
+    CREATOR_AUDIENCE: process.env.CREATOR_AUDIENCE ?? "their audience",
+  };
+  for (const [k, v] of Object.entries(vars)) {
+    prompt = prompt.replaceAll(`{{${k}}}`, v);
+  }
+  return prompt;
+}
+
+const SYSTEM_PROMPT = loadSystemPrompt();
+
+function buildUserPrompt(row: TieredRow): string {
+  const captionFirst = (row.caption ?? "").slice(0, 400).replace(/\s+/g, " ").trim();
+  const ageHours = Math.round((Date.now() - new Date(row.posted_at).getTime()) / 36e5);
+
+  const stats = [
+    `posted ${ageHours}h ago`,
+    `tier: ${row.computed_tier}`,
+    `views: ${row.views} (median: ${Math.round(row.median_views)})`,
+    `reach: ${row.reach ?? "n/a"} (median: ${Math.round(row.median_reach ?? 0)})`,
+    `interactions: ${row.total_interactions ?? "n/a"} (median: ${Math.round(row.median_interactions ?? 0)})`,
+    row.avg_watch_time_ms != null
+      ? `avg watch: ${(row.avg_watch_time_ms / 1000).toFixed(1)}s (median: ${(row.median_watch_ms / 1000).toFixed(1)}s)`
+      : "avg watch: n/a",
+    row.reels_skip_rate != null
+      ? `skip rate: ${row.reels_skip_rate.toFixed(1)}%`
+      : "skip rate: n/a",
+  ].join(" | ");
+
+  return `Caption/hook: ${captionFirst || "[no caption]"}
+
+Performance: ${stats}
+
+Write the 2-3 sentence assessment.`;
+}
+
+function shouldSkip(row: TieredRow, force: boolean): boolean {
+  if (row.manual_notes_override) return true;
+  if (force) return false;
+  if (!row.performance_notes || !row.notes_assessed_at) return false;
+  const stored = row.stored_tier ?? "";
+  if (stored !== row.computed_tier) return false; // tier changed, regenerate
+  const ageDays =
+    (Date.now() - new Date(row.notes_assessed_at).getTime()) / 86400_000;
+  return ageDays < STALE_DAYS;
+}
+
+async function main() {
+  const { force, dryRun, limit } = args();
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey && !dryRun) {
+    throw new Error(
+      "ANTHROPIC_API_KEY not set. Either set it in .env.local or run with --dry-run.",
+    );
+  }
+  const anthropic = apiKey ? new Anthropic({ apiKey }) : null;
+
+  const supabase = getSupabaseAdmin();
+  if (!supabase) throw new Error("Supabase admin client unavailable");
+
+  const { data, error } = await supabase
+    .from("ig_media_tiered")
+    .select("*")
+    .order("posted_at", { ascending: false });
+  if (error) throw error;
+
+  const rows = (data ?? []) as TieredRow[];
+  const slice = limit ? rows.slice(0, limit) : rows;
+  console.log(`[assess] ${slice.length} posts loaded${dryRun ? " (DRY RUN)" : ""}`);
+
+  let processed = 0;
+  let skipped = 0;
+  let written = 0;
+  let untested = 0;
+  let failed = 0;
+
+  for (const row of slice) {
+    processed++;
+    if (row.computed_tier === "untested") untested++;
+
+    if (shouldSkip(row, force)) {
+      skipped++;
+      if (!dryRun && row.stored_tier !== row.computed_tier) {
+        await supabase
+          .from("ig_media")
+          .update({
+            performance_tier: row.computed_tier,
+            tier_assessed_at: new Date().toISOString(),
+          })
+          .eq("id", row.id);
+      }
+      continue;
+    }
+
+    let notes: string | null = null;
+    if (row.computed_tier === "untested") {
+      notes = "Posted in the last 48 hours. Data still maturing; classification will update once the 48h window closes.";
+    } else if (anthropic) {
+      try {
+        const resp = await anthropic.messages.create({
+          model: MODEL,
+          max_tokens: 300,
+          system: [
+            { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+          ],
+          messages: [{ role: "user", content: buildUserPrompt(row) }],
+        });
+        const block = resp.content.find((c) => c.type === "text");
+        notes = block && "text" in block ? block.text.trim() : null;
+      } catch (err) {
+        console.error(`  ${row.id} Claude error:`, err);
+        failed++;
+        continue;
+      }
+    } else {
+      notes = `[DRY RUN - would call ${MODEL}] ${buildUserPrompt(row).slice(0, 200)}…`;
+    }
+
+    if (!notes) {
+      failed++;
+      continue;
+    }
+
+    console.log(
+      `  [${processed}/${slice.length}] ${row.computed_tier.padEnd(14)} views=${String(row.views).padStart(7)} | ${notes.slice(0, 90)}${notes.length > 90 ? "…" : ""}`,
+    );
+
+    if (dryRun) continue;
+
+    const now = new Date().toISOString();
+
+    const { error: updErr } = await supabase
+      .from("ig_media")
+      .update({
+        performance_tier: row.computed_tier,
+        tier_assessed_at: now,
+        performance_notes: notes,
+        notes_assessed_at: now,
+        notes_model: row.computed_tier === "untested" ? "rule" : MODEL,
+      })
+      .eq("id", row.id);
+
+    if (updErr) {
+      console.error(`  ${row.id} db update failed:`, updErr.message);
+      failed++;
+      continue;
+    }
+
+    // Mirror to Notion
+    const notionPageId = await findAnalyticsPageByMediaId(row.id);
+    if (notionPageId) {
+      await upsertAnalyticsPage(
+        {
+          igMediaId: row.id,
+          igUrl: row.ig_url,
+          caption: row.caption,
+          postedAt: row.posted_at,
+          mediaType: row.media_type,
+          mediaProductType: row.media_product_type,
+          metrics: {
+            reach: row.reach,
+            views: row.views,
+            likes: null,
+            comments: null,
+            shares: null,
+            saves: null,
+            total_interactions: row.total_interactions,
+            avg_watch_time_ms: row.avg_watch_time_ms,
+            total_play_time_ms: null,
+            reels_skip_rate: row.reels_skip_rate,
+            reposts: null,
+          },
+          snapshotCount: 1,
+          firstSeenAt: row.posted_at,
+          lastSyncedAt: row.latest_snapshot_at ?? row.posted_at,
+          deletedAt: null,
+          notionScriptId: row.notion_script_id,
+          performanceTier: TIER_LABEL[row.computed_tier],
+          performanceNotes: notes,
+          tierAssessedAt: now,
+          notesAssessedAt: now,
+          notesModel: row.computed_tier === "untested" ? "rule" : MODEL,
+        },
+        notionPageId,
+      );
+    }
+
+    written++;
+  }
+
+  console.log("");
+  console.log("=== ASSESSMENT COMPLETE ===");
+  console.log(`processed:   ${processed}`);
+  console.log(`written:     ${written}`);
+  console.log(`skipped:     ${skipped} (notes still fresh or manual override)`);
+  console.log(`untested:    ${untested}`);
+  console.log(`failed:      ${failed}`);
+}
+
+main().catch((e) => {
+  console.error("ASSESSMENT FAILED:", e);
+  process.exit(1);
+});

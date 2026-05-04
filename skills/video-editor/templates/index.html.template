@@ -1,0 +1,209 @@
+<!--
+  Structural reference template for a 9:16 short-form video composition.
+
+  Copy this into your project as the starting point, then fill in the
+  beat overlays, palette tokens, and timeline tweens. The build_index.py
+  generator inlines transcript JSON into the __WORDS_JSON__ placeholder
+  at the bottom.
+
+  Placeholders to replace:
+    {{COMPOSITION_ID}}    e.g. "my-reel-001"
+    {{TOTAL_DURATION_S}}  e.g. 47.0
+    {{BRAND_TINT_HEX}}    e.g. #ff7a1a
+    {{BRAND_TINT_RGB}}    e.g. 255, 122, 26  (used inside rgba())
+    {{HEADLINE_FONT}}     e.g. 'Playfair Display'
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>{{COMPOSITION_ID}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&family=JetBrains+Mono:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  /* Brand tokens — override in your project's BRAND.md.
+     The orange-frosted-glass treatment is the documented default.
+     See overlay-defaults.md for the full spec. */
+  --brand-tint: {{BRAND_TINT_HEX}};
+  --brand-tint-rgb: {{BRAND_TINT_RGB}};
+  --brand-tint-glow: rgba(var(--brand-tint-rgb), 0.55);
+
+  /* Karaoke pill — light purple by default, complementary to most warm tints */
+  --karaoke-bg: rgba(195, 175, 230, 0.94);
+  --karaoke-text: #1f3a2c;
+
+  /* Hard drop-shadow stack for white text on tinted glass */
+  --text-shadow-hard:    1.5px 1.5px 0 rgba(0,0,0,0.92), 0 4px 14px rgba(0,0,0,0.45);
+  --text-shadow-hard-lg: 2px   2px   0 rgba(0,0,0,0.92), 0 6px 22px rgba(0,0,0,0.45);
+  --text-shadow-hard-xl: 3px   3px   0 rgba(0,0,0,0.92), 0 8px 28px rgba(0,0,0,0.5);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #000; overflow: hidden; }
+
+#{{COMPOSITION_ID}} {
+  position: relative;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Speaker plate — fills the full frame; overlays sit on top of it */
+.speaker-wrapper { position: absolute; inset: 0; }
+.speaker-wrapper video { width: 100%; height: 100%; object-fit: cover; }
+
+/* Frosted glass card — reusable overlay container */
+.frosted-card {
+  position: absolute;
+  background: rgba(var(--brand-tint-rgb), 0.62);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1.5px solid rgba(255, 255, 255, 0.32);
+  border-radius: 32px;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 22px 56px rgba(0, 0, 0, 0.42),
+    0 0 38px rgba(var(--brand-tint-rgb), 0.28);
+  color: #ffffff;
+  text-shadow: var(--text-shadow-hard);
+  text-align: center;
+  opacity: 0;
+}
+.frosted-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 35%,
+    rgba(255,255,255,0) 65%, rgba(255,255,255,0.08) 100%);
+  pointer-events: none;
+}
+
+/* Karaoke pill — single, chest-level, text content updates per word */
+.karaoke-pill-wrap {
+  position: absolute;
+  left: 0; right: 0;
+  top: 1380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.karaoke-pill {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 22px;
+  background: var(--karaoke-bg);
+  color: var(--karaoke-text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 78px;
+  letter-spacing: -0.015em;
+  line-height: 1.0;
+  box-shadow:
+    0 0 0 1.5px rgba(255, 255, 255, 0.42),
+    0 6px 22px rgba(195, 175, 230, 0.4),
+    0 16px 44px rgba(0, 0, 0, 0.32);
+  text-shadow: none;
+  white-space: nowrap;
+  opacity: 0;
+}
+</style>
+</head>
+<body>
+
+<div id="{{COMPOSITION_ID}}"
+     data-composition-id="{{COMPOSITION_ID}}"
+     data-start="0"
+     data-width="1080"
+     data-height="1920">
+
+  <!-- Speaker (single mp4 with embedded audio) -->
+  <div class="speaker-wrapper">
+    <video id="speaker-video" src="assets/edited.mp4"
+           data-has-audio="true"
+           data-start="0"
+           data-duration="{{TOTAL_DURATION_S}}"
+           data-track-index="0"></video>
+  </div>
+
+  <!-- Karaoke single pill — chest level, content updates per word -->
+  <div class="karaoke-pill-wrap clip"
+       data-start="0"
+       data-duration="{{TOTAL_DURATION_S}}"
+       data-track-index="1">
+    <span class="karaoke-pill" id="karaoke-pill">&nbsp;</span>
+  </div>
+
+  <!--
+    Beat overlays go here. Each is a .frosted-card.clip with:
+      - id="beat-N"
+      - data-start, data-duration, data-track-index (use track 2-19)
+      - inner content (headline text, icons, sub-cards)
+
+    Example:
+
+      <div class="frosted-card hook-glass clip" id="beat-1"
+           data-start="0.2" data-duration="2.8" data-track-index="2">
+        <span class="hook-text">Your hook text here</span>
+        <span class="hook-subtext">Your subtext here</span>
+      </div>
+  -->
+
+</div>
+
+<script id="words-data" type="application/json">__WORDS_JSON__</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(() => {
+  const WORDS = JSON.parse(document.getElementById('words-data').textContent);
+  const pillEl = document.getElementById('karaoke-pill');
+
+  gsap.defaults({ ease: 'expo.out' });
+  const tl = gsap.timeline({ paused: true });
+
+  // ---------- Karaoke ----------
+  // KARAOKE_LEAD = -0.03 fires the pill 30ms before the transcript word.start.
+  // Tested as the right offset for single-mp4 + data-has-audio="true".
+  const KARAOKE_LEAD = -0.03;
+  WORDS.forEach((w, i) => {
+    const next = WORDS[i + 1];
+    const gapToNext = next ? next.s - w.e : Infinity;
+    const wStart = Math.max(0, w.s + KARAOKE_LEAD);
+    const wEnd = Math.max(wStart + 0.05, w.e + KARAOKE_LEAD);
+    tl.call(() => { pillEl.textContent = w.t; }, null, wStart);
+    tl.to(pillEl, { opacity: 1, duration: 0.06 }, wStart);
+    if (gapToNext > 0.18) {
+      tl.to(pillEl, { opacity: 0, duration: 0.12 }, wEnd);
+    }
+  });
+  if (WORDS.length) {
+    tl.to(pillEl, { opacity: 0, duration: 0.2 },
+      WORDS[WORDS.length - 1].e + 0.05 + KARAOKE_LEAD);
+  }
+
+  // ---------- Beat tweens ----------
+  // Per-beat overlay enter, hold, exit. See sage-stack/editorial-magazine/screen-face-split
+  // patterns.json files for archetype-specific motion recipes.
+  //
+  //   tl.fromTo('#beat-1',
+  //     { opacity: 0, y: -28, scale: 0.94 },
+  //     { opacity: 1, y: 0, scale: 1, duration: 0.45 },
+  //     0.2);
+  //   tl.to('#beat-1', { opacity: 0, y: -16, duration: 0.3, ease: 'expo.in' }, 2.7);
+  //   tl.set('#beat-1', { opacity: 0 }, 3.0);
+
+  // Pad the timeline to full duration (Law 11 — kills black-frame flashes)
+  tl.set({}, {}, {{TOTAL_DURATION_S}});
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines['{{COMPOSITION_ID}}'] = tl;
+})();
+</script>
+
+</body>
+</html>

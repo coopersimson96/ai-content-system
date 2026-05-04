@@ -1,0 +1,82 @@
+# Motion Plan — {{PROJECT_SLUG}}
+
+**Archetype:** {{ARCHETYPE_SLUG}} (e.g. `sage-stack`, `editorial-magazine`, `screen-face-split`)
+**Total duration:** {{TOTAL_DURATION_S}}
+**Beat count:** {{BEAT_COUNT}}
+**Generated:** {{ISO_DATE}}
+**Brand:** {{BRAND_REFERENCE}} (e.g. `style-guides/BRAND.md.example`)
+
+> **Strategy (one paragraph):** what's the meta-frame for this video? What recurring visual idea ties the beats together? Write this before you fill in the timeline - it forces you to know what the video is about.
+
+---
+
+## Timeline
+
+| # | Time | Transcript | Intent | Pattern | Key Params |
+|---|------|-----------|--------|---------|------------|
+| 1 | 0.0-X.Xs | "First spoken phrase from your transcript here" | hook | `<pattern-id-from-archetype>` | param1=value, param2=value |
+| 2 | X.X-Y.Ys | "Second beat" | section-header | `<pattern-id>` | structural_text="...", emphasis_text="..." |
+| 3 | Y.Y-Z.Zs | "Third beat" | concept-demo | `<pattern-id>` | ... |
+| ... | | | | | |
+| N | A.A-B.Bs | "CTA closer" | cta | `<cta-pattern-id>` | verb_text="comment", keyword_text="..." |
+
+**Intent values** (from each archetype's pattern library):
+- `hook` - opening 1-3s, sets the topic via object metaphor or headline card
+- `list-preview` - "here are the X things" upfront preview
+- `section-header` - marks the start of a new section (header pair, masthead, etc.)
+- `tool-reveal` - introduces a specific named product / app / surface
+- `concept-demo` - shows what a tool DOES (UI mock, dashboard, flowchart)
+- `claim` - speaker delivers a quotable sentence or hero pull-quote
+- `proof` - data, screenshot, social-proof slab
+- `transition` - bridges between two sections
+- `cta` - the engagement instruction at the end (comment X, sign up, etc.)
+- `closer` - final hold beat, often a callback to the hook
+- `caption-only` - default fallback when no other pattern matches
+
+---
+
+## Asset Manifest
+
+Assets each pattern needs that aren't already in `assets/`:
+
+- ⚠️ **Need:** [asset description] (suggested source: [where to get it])
+- ⚠️ **Need:** [asset description]
+- ✓ **Have:** `assets/edited.mp4` (your trimmed speaker plate)
+- ✓ **Have:** `assets/transcript.json`
+- ✓ **Have:** `style-guides/BRAND.md.example` (or your customized version)
+
+---
+
+## Open Questions
+
+Things you want to pin down before generating HTML:
+
+- Beat at X.Xs - speaker says "..." Could be `claim` or `transition`. Defaulted to claim. Confirm?
+- No pattern matched at Y.Ys ("..."). Suggest adding a `<pattern-id>` from <archetype>? Falls back to plain caption otherwise.
+- Asset for beat N - does it need a real product logo or will an icon stand in?
+
+---
+
+## How to use this plan
+
+1. **Walk the timeline** - each row gets one pattern from your chosen archetype's `patterns.json`. If a beat's intent doesn't match any pattern's `scene_type`, fall back to `caption-only`.
+2. **Resolve open questions** - either answer inline or sketch out the alternative.
+3. **Sanity check** - read the full plan top-to-bottom. Does it tell a story? Any beats feel skippable? Any gaps where the speaker keeps talking but the visual goes stale?
+4. **Generate** - copy `build_index.py` and the archetype's HTML template, fill in the per-beat overlays from this plan, and run the build script.
+5. **Lint and preview** - iterate live before any render.
+
+---
+
+## Pattern Confidence
+
+If you're using the `motion-plan` flow with LLM-assisted pattern matching, capture confidence scores here:
+
+- **High (greater than or equal to 0.75):** N beats - matched cleanly to existing patterns
+- **Medium (0.50-0.75):** N beats - likely match but worth reviewing
+- **Low (less than 0.50):** N beats - custom mappings, no prior examples to score against
+
+Manual planning skips this section - just walk the timeline and pick patterns by feel.
+
+---
+
+*Customize this template per project. The structure stays; the rows fill in from your transcript.*

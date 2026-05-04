@@ -1,6 +1,6 @@
 # AI Content System
 
-A complete AI-powered content creation system built on Claude Code. 52 skills across 7 categories — from topic research to script production, SEO audits, ad optimization, blog writing, image generation, and e-commerce CRO.
+A complete AI-powered content creation system built on Claude Code. 69 skills across 8 categories — from topic research to script production, SEO audits, ad optimization, blog writing, image generation, e-commerce CRO, Instagram analytics, and 9:16 video production with Hyperframes.
 
 ## What's Included
 

@@ -1,0 +1,186 @@
+# {{CREATOR_NAME}} Brand — Visual Spec (TEMPLATE)
+
+**Status: TEMPLATE.** Fork this file and fill in your own palette, type, and texture rules. This is the single source of truth for your content-brand visual identity. All archetype `STYLE_DECON.md` guides defer to this doc for color, type, and grain treatments. Archetype guides own *format and grammar*; this doc owns *brand*.
+
+If a future style guide's "Brand Adaptation" section conflicts with anything here, this file wins.
+
+---
+
+## 0 · The brand essence in one line
+
+**[Your brand essence — one sentence.]**
+
+Examples to draw from:
+- "Sage green, warm cream, classical serifs, naturally-graded faces. Premium-but-approachable. Editorial-but-modern."
+- "Cobalt + neon yellow, geometric sans, high-contrast monochrome speaker. Confident-but-loud. Tech-startup-but-not-corporate."
+- "Cream paper + ink, italic serif, hand-drawn flourishes. Editorial-but-warm. Considered-but-not-precious."
+
+Pick a register. Commit to it. Every visual choice downstream serves it.
+
+---
+
+## 1 · Color System
+
+The palette is **[N colors total]**. No others without explicit override.
+
+### 1.1 Brand-core (use these in every video)
+
+| Token | Hex | Role | Where it appears |
+|-------|-----|------|------------------|
+| `--primary-mid` | `#XXXXXX` | Primary brand hue, surfaces, italic-emphasis text | Cards, italic captions, ambient washes |
+| `--primary-deep` | `#XXXXXX` | Card edges, drop shadows, 3D depth, secondary emphasis | Bevels, text on light backgrounds |
+| `--primary-light` | `#XXXXXX` | Highlights, chrome sheen on cards, hover states | Diagonal sweep on every brand card |
+| `--anchor-near-black` | `#XXXXXX` | Structural type, the anchor color | Headers, CTA verbs, body emphasis |
+| `--background-paper` | `#XXXXXX` | Default background | All non-brand-color scenes |
+
+**Reference example palette (sage-default - replace with yours):**
+```css
+--primary-mid:        #6a9e88;
+--primary-deep:       #3f6b58;
+--primary-light:      #a8d9c2;
+--anchor-near-black:  #1f3a2c;
+--background-paper:   #f0ece5;
+```
+
+### 1.2 Accent (use sparingly - earned, never decorative)
+
+| Token | Hex | Role | When to use |
+|-------|-----|------|-------------|
+| `--accent-warm` | `#XXXXXX` | Premium / urgency / "the exception" | One-row color-break in numbered lists. Single emphasis word per video for "the punchline." Never two accent elements simultaneously. |
+| `--accent-alert` | `#XXXXXX` | Active / alert / system-state highlight | Sidebar bands in fake UI. At most one per video. |
+
+**Reference example accents:**
+```css
+--accent-warm:  #c8843a;
+--accent-alert: #e8a591;
+```
+
+### 1.3 Discipline rules
+
+- **Brand-core family + paper background = ~90% of every frame.** Foreign-brand surfaces (real product logos like Notion purple, Figma orange) earn their place by being a real product the script names.
+- **Never inject a color "because it looks nice."** Each color carries one meaning.
+- **Foreign-brand colors are imported, not invented.** Don't tint real product logos to match your brand.
+- **No neon, no fluorescent** unless your essence calls for it explicitly.
+- **Pure black is too cold against warm-paper backgrounds.** Use `--anchor-near-black` instead.
+
+---
+
+## 2 · Type System
+
+Two type voices. They are non-negotiable. No third voice without explicit override.
+
+### 2.1 Voice A — Structural
+
+- **Family:** [your structural type family - e.g. classical display serif, geometric sans, slab serif]
+  - Reference example: Recoleta Bold, Eames Century Modern Bold, Caslon Display Bold, Playfair Display Bold all read correctly for a sage-default brand
+- **Color:** `--anchor-near-black`
+- **Weight:** Bold (700)
+- **Treatment:** [optional - drop shadow, kerning, etc.]
+- **Used for:** section headers, structural words, CTA verbs, masthead labels
+
+### 2.2 Voice B — Emphasis
+
+- **Family:** [emphasis variant of Voice A - usually italic of the same family]
+- **Color:** `--primary-mid`
+- **Weight:** Regular italic
+- **Used for:** the *emphasis* word inside a header pair, italic captions
+
+### 2.3 Voice C — UI mono (in-product overlays only)
+
+- **Family:** [mono family - Geist Mono, JetBrains Mono, Roboto Mono]
+- **Color:** `--anchor-near-black` on light, `--primary-light` on dark
+- **Used for:** code blocks, JSON in scraping demos, app sidebar labels in fake-UI surfaces
+- **Never** for narration captions
+
+### 2.4 Caption type (the spoken word on screen)
+
+- **Family:** [your caption family - Voice A italic for editorial brands, heavy sans for ad-register brands]
+- **Color:** [your caption color - white on a tinted pill, or single-emphasis-word color over speaker]
+- **Single emphasis word per caption** - the rest stay neutral
+
+### 2.5 Type discipline rules
+
+- **No grotesque / geometric sans** if your essence is editorial. Inter / Helvetica / SF Pro / Geist Sans break editorial register.
+- **No Montserrat** for any role unless your brand calls for it. Reads "lifestyle blog" by default.
+- **Italics earn their place.** Italic = emphasis or contrast. Don't italicize a whole sentence.
+- **Type sizes are aggressive.** Hero title cards run 96-160px. Section labels at 32-48px. Captions at 56-72px.
+
+---
+
+## 3 · Speaker Treatment (when face is shown)
+
+### 3.1 The grading rule
+
+Decide your stance: **naturally graded** or **stylized**? The two big options:
+
+- **Naturally graded** (editorial-magazine and screen-face-split default) - keep the speaker's real environment, real lighting, real skin tones. Mild warm bias OK. The "I just sat down to film this" energy is the trust device.
+- **Stylized / desaturated** (sage-stack default for the original Greg Isenberg reference; modern-creator brands tend to invert this and stay naturally graded instead) - the speaker is a B-roll element, the graphics carry color.
+
+Most modern creators run naturally-graded because heavy grading reads as "AI-bro reel" by default. Choose deliberately.
+
+### 3.2 Framing rule
+
+- Chest-up, head-anchor stable, mic visible bottom-right (or just out of frame)
+- Centered horizontally
+- Eyeline locked center
+
+---
+
+## 4 · Texture
+
+- **Grain overlay** at low opacity (~3-4%) on every scene - ties everything together
+- **Paper texture** for B-roll-only scenes (if your brand uses paper)
+- **No glossy gradients, no neon glows, no chromatic aberration** as a brand-default unless your essence calls for them
+
+---
+
+## 5 · Motion / Transitions
+
+This file does not own motion - each archetype's `STYLE_DECON.md` does. But two cross-cutting brand rules:
+
+1. **Bouncy / elastic easing yes/no** - default no for editorial brands, yes for playful brands.
+2. **Hard cuts vs. whip-blurs** - default rule, archetypes can override.
+
+---
+
+## 6 · How to apply this
+
+### 6.1 In a STYLE_DECON.md
+
+Each archetype guide's "Brand Adaptation" section should reference this file rather than inlining values:
+
+> See `style-guides/BRAND.md`. The format and grammar of [archetype] applies as documented; all colors, type voices, and speaker grading defer to BRAND.md unless a specific override is noted below.
+
+### 6.2 In a video composition
+
+Drop these CSS variables into a shared `assets/brand-tokens.css` and `@import` it in every composition's root:
+
+```css
+:root {
+  --primary-mid:        #XXXXXX;
+  --primary-deep:       #XXXXXX;
+  --primary-light:      #XXXXXX;
+  --anchor-near-black:  #XXXXXX;
+  --background-paper:   #XXXXXX;
+  --accent-warm:        #XXXXXX;
+  --accent-alert:       #XXXXXX;
+}
+```
+
+### 6.3 When this file changes
+
+A change here cascades to every archetype guide and every video composition. Treat updates with care. Any color or type-voice change should be discussed before committing - it changes the visual identity of every future video.
+
+---
+
+## 7 · Open / unresolved
+
+Things to lock down:
+
+- **Specific font file** for Voice A
+- **Logo wordmark**
+- **Music / SFX bed** (out of scope for visual brand)
+
+---
+
+*Last updated: {{ISO_DATE}}. Lock-in event: {{WHAT_HAPPENED}}.*

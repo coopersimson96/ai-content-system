@@ -1,0 +1,427 @@
+{
+  "archetype_id": "sage-stack",
+  "version": "0.2.0",
+  "version_date": "2026-04-26",
+  "description": "9:16 list-explainer with sage 3D chrome cards, two-voice serif typography, numbered cascade opener, whip-blur transitions, comment-keyword CTA. Greg-Isenberg-style format adapted to a modern-creator brand (sage palette + naturally-graded speaker by default — see BRAND.md.example).",
+  "duration_range_s": [40, 70],
+  "brand_spec": "../BRAND.md.example",
+  "style_decon": "./STYLE_DECON.md",
+  "fits_script_when": [
+    "script enumerates a list of 3+ items (tools / concepts / steps / reasons / layers)",
+    "speaker is on camera for narration, not voiceover-over-screen-recording",
+    "topic is tech / SaaS / AI / productivity / vibe-coding tooling",
+    "ends with engagement CTA in the form 'comment X' or similar two-word keyword",
+    "total duration is 40-70 seconds",
+    "vibe is 'designed/premium/considered', not 'raw/workmanlike'"
+  ],
+  "does_not_fit_when": [
+    "no enumeration in the script (single-narrative essay or hot-take)",
+    "live screen recording is essential (use screen-face-split)",
+    "magazine-style chapter framing or print-layout aesthetic (use editorial-magazine)",
+    "ad-style headline + product surface required (use screen-face-split)",
+    "speaker is walking-and-talking outdoors (no archetype yet covers this)"
+  ],
+  "default_fallback_pattern_id": "caption-only-italic",
+  "patterns": [
+    {
+      "id": "hook-cube-on-face",
+      "name": "Cube hovering over speaker's mouth",
+      "description": "Opening 1.5s hook beat. A 3D sage cube (or cube labeled with the topic word, e.g. 'AI') hovers in front of the speaker's mouth, slightly rotating. Sets the topic via object metaphor.",
+      "scene_type": "hook",
+      "unique_per_video": true,
+      "duration_s": [1.0, 2.0],
+      "position": {"constraint": "first-N-seconds", "value": 2.0},
+      "trigger": {
+        "script_signal": "video opens with a single declarative noun-phrase that names the topic (e.g. 'the AI agent stack', 'Claude Code', 'context engineering')",
+        "regex_hint": "^(here'?s|the|i use|let me show you|this is)"
+      },
+      "brand_tokens": ["--primary-mid", "--primary-deep", "--primary-light", "--anchor-near-black"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/hook-cube-on-face.html",
+        "css_template": "templates/hook-cube-on-face.css",
+        "js_template": "templates/hook-cube-on-face.js"
+      },
+      "params": {
+        "label_text": {"type": "string", "default": "AI", "description": "Word printed on the cube face. Usually 1-3 chars.", "required": true},
+        "rotation_amplitude_deg": {"type": "number", "default": 8, "description": "How far the cube rotates on its sine loop", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "0.0-1.5s", "note": "The original. 'AI' cube on speaker's mouth."}
+      ]
+    },
+    {
+      "id": "numbered-cascade-opener",
+      "name": "Numbered cards cascading diagonally",
+      "description": "5 sage 3D cards (numbers 1-5) drop in diagonally from upper-left to lower-right with stagger. Establishes 'this is a list' upfront. Maps to script's enumeration count (default 5, scales 3-7).",
+      "scene_type": "list-preview",
+      "unique_per_video": true,
+      "duration_s": [2.0, 4.0],
+      "position": {"constraint": "first-N-seconds", "value": 8.0},
+      "trigger": {
+        "script_signal": "speaker introduces a list of N items in first 0-10s (e.g. 'here are the 5 things', 'I use 3 tools', 'the full stack is')",
+        "regex_hint": "(here(\\s)+(are|s)|the\\s+\\d+\\s+|(\\d+|three|four|five|six)\\s+(things|reasons|tools|tricks|tips|layers|ways|steps))"
+      },
+      "brand_tokens": ["--primary-mid", "--primary-deep", "--primary-light"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/numbered-cascade.html",
+        "css_template": "templates/numbered-cascade.css",
+        "js_template": "templates/numbered-cascade.js"
+      },
+      "params": {
+        "card_count": {"type": "number", "default": 5, "description": "Number of cards in the cascade (3-7). Auto-detect from script enumeration.", "required": true},
+        "stagger_ms": {"type": "number", "default": 120, "description": "Delay between each card's entry, in ms", "required": false},
+        "card_size_px": {"type": "number", "default": 280, "description": "Square edge length per card", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "1.5-3.0s", "note": "5 cards 1-5"},
+        {"reel": "DWcIFs7EVIh", "timestamp": "0.5-3.0s", "note": "Pure B-roll variant; no speaker, full-screen card cascade"}
+      ]
+    },
+    {
+      "id": "section-header-pair",
+      "name": "Two-voice serif section header (structural + italic emphasis)",
+      "description": "Section title appears: a structural noun-phrase in dark-green serif + an italic-sage emphasis word. Lands with stagger between the two voices. Marks the start of a new layer/section.",
+      "scene_type": "section-header",
+      "unique_per_video": false,
+      "duration_s": [1.5, 2.5],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker transitions to a new section, often with phrasing like 'first, the X', 'next is the X', 'and then there's X'",
+        "regex_hint": "^(first|second|third|next|now|finally|and then|then there'?s|after that)"
+      },
+      "brand_tokens": ["--anchor-near-black", "--primary-mid", "--accent-warm"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/section-header-pair.html",
+        "css_template": "templates/section-header-pair.css",
+        "js_template": "templates/section-header-pair.js"
+      },
+      "params": {
+        "structural_text": {"type": "string", "default": "First, the", "description": "Voice A — dark-green serif words. Usually 1-4 words.", "required": true},
+        "emphasis_text": {"type": "string", "default": "agent harness", "description": "Voice B — italic-sage emphasis word/phrase. Usually 1-3 words.", "required": true},
+        "drop_shadow": {"type": "boolean", "default": true, "description": "Subtle warm-orange shadow under the type", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "6.5-8.5s", "note": "'First, the' + italic 'agent harness'"},
+        {"reel": "DXhnRKxERkj", "timestamp": "32.5-35.0s", "note": "'Ops Brain' header + Obsidian/Notion icons"}
+      ]
+    },
+    {
+      "id": "tool-reveal-card",
+      "name": "Tool reveal card with logo",
+      "description": "Speaker stays on screen; a 3D sage card with a real product logo (extruded white linework or actual logo PNG) and the tool's name in white serif drops in beside the speaker. Used to introduce one of the tools in the list.",
+      "scene_type": "tool-reveal",
+      "unique_per_video": false,
+      "duration_s": [2.0, 3.0],
+      "position": {"constraint": "after-pattern", "value": "section-header-pair"},
+      "trigger": {
+        "script_signal": "speaker names a specific product (Cursor, Claude Code, Perplexity, Notion, etc.) and credits it with a job",
+        "regex_hint": "(i use|i recommend|with|using|via)\\s+[A-Z]"
+      },
+      "brand_tokens": ["--primary-mid", "--primary-deep", "--background-paper"],
+      "hyperframes": {
+        "blocks": ["app-showcase"],
+        "html_template": "templates/tool-reveal-card.html",
+        "css_template": "templates/tool-reveal-card.css",
+        "js_template": "templates/tool-reveal-card.js"
+      },
+      "params": {
+        "tool_name": {"type": "string", "description": "Product name printed under the logo (e.g. 'Cursor')", "required": true},
+        "logo_path": {"type": "asset-path", "description": "Path to product logo PNG/SVG. Flag as asset-needed if not provided.", "required": true},
+        "card_position": {"type": "string", "default": "top-right", "description": "Where the card floats relative to speaker: top-right | top-left | center", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "8.5-11.0s", "note": "Cursor diamond logo top-right while speaker explains"}
+      ]
+    },
+    {
+      "id": "concept-demo-glass-overlay",
+      "name": "Liquid-glass card overlay on a backdrop",
+      "description": "Frosted-glass card with corner-bracket frame slides in over a backdrop (could be a fake-UI screenshot, a flowchart, or a sage gradient). Used to demonstrate WHAT a tool does in one sentence. Caption sweeps across the glass card.",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [2.0, 3.5],
+      "position": {"constraint": "after-pattern", "value": "tool-reveal-card"},
+      "trigger": {
+        "script_signal": "speaker explains in one sentence what the tool DOES — the verb+object phrase",
+        "regex_hint": "(that|which|it)\\s+(go(es)?|find(s)?|let(s)?|help(s)?|build(s)?|make(s)?|run(s)?|create(s)?)"
+      },
+      "brand_tokens": ["--primary-mid", "--primary-light", "--background-paper"],
+      "hyperframes": {
+        "blocks": ["app-showcase", "flowchart"],
+        "html_template": "templates/concept-demo-glass-overlay.html",
+        "css_template": "templates/concept-demo-glass-overlay.css",
+        "js_template": "templates/concept-demo-glass-overlay.js"
+      },
+      "params": {
+        "backdrop_type": {"type": "string", "default": "sage-gradient", "description": "What sits behind the glass: sage-gradient | screenshot | flowchart", "required": true},
+        "backdrop_asset": {"type": "asset-path", "description": "Image/SVG for backdrop if type=screenshot or flowchart", "required": false},
+        "caption_text": {"type": "string", "description": "The concept-explaining sentence — italic-serif sweep across the glass", "required": true}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "21.0-23.0s", "note": "Glass card over Perplexity flowchart with 'that go and find information' caption"}
+      ]
+    },
+    {
+      "id": "fake-ui-screen-mock",
+      "name": "Fake-UI window with code/JSON/list",
+      "description": "Light-mode card styled as an app window (chrome dots, title bar, content area). Shows JSON code, list rows, or chat UI. Used to demo a tool's actual surface without needing a real screen recording.",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [2.0, 3.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker references a specific output format (JSON, markdown, list, chat) or a tool's UI explicitly",
+        "regex_hint": "(JSON|markdown|prompt|chat|UI|interface|setup)"
+      },
+      "brand_tokens": ["--background-paper", "--anchor-near-black", "--primary-mid"],
+      "hyperframes": {
+        "blocks": ["app-showcase"],
+        "html_template": "templates/fake-ui-screen-mock.html",
+        "css_template": "templates/fake-ui-screen-mock.css",
+        "js_template": "templates/fake-ui-screen-mock.js"
+      },
+      "params": {
+        "ui_type": {"type": "string", "default": "json-window", "description": "json-window | chat-prompt | sidebar-list | dashboard | code-block", "required": true},
+        "content": {"type": "string", "description": "The text content to render inside the fake UI", "required": true},
+        "tilt_deg": {"type": "number", "default": 4, "description": "Slight rotateY tilt for 3D presence", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "27.0-29.0s", "note": "JSON window with url/markdown/json/screenshot keys + 'Scraping...' status pill"},
+        {"reel": "DXhnRKxERkj", "timestamp": "11.0-14.5s", "note": "Claude Code agent harness sidebar list"}
+      ]
+    },
+    {
+      "id": "whip-blur-transition",
+      "name": "Vertical whip-blur transition with chromatic fringe",
+      "description": "Hides a scene cut between two B-roll beats. Vertical (or diagonal) directional blur with a chromatic-aberration streak overlay. ~0.5-0.7s total (out + in).",
+      "scene_type": "transition",
+      "unique_per_video": false,
+      "duration_s": [0.4, 0.7],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "scene cut between two non-speaker beats — used between sections of the list",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--primary-light", "--background-paper", "--accent-warm"],
+      "hyperframes": {
+        "blocks": ["whip-pan"],
+        "html_template": "templates/whip-blur-transition.html",
+        "css_template": "templates/whip-blur-transition.css",
+        "js_template": "templates/whip-blur-transition.js"
+      },
+      "params": {
+        "direction": {"type": "string", "default": "vertical-up", "description": "vertical-up | vertical-down | diagonal-ne | diagonal-nw", "required": false},
+        "fringe_color_token": {"type": "color-token", "default": "--accent-warm", "description": "Chromatic-aberration streak color", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "14.5-15.0s", "note": "Whip from Claude Code sidebar to search bar reveal"}
+      ]
+    },
+    {
+      "id": "stack-recompose-cards",
+      "name": "Stack of product-mode cards recomposing",
+      "description": "Multiple iOS-style cards stack on top of each other; top card slides up + fades while a new card grows from beneath. Used when ONE tool has multiple modes (e.g. Firecrawl Scrape → Crawl → Extract).",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [2.5, 3.5],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker enumerates 2-3 modes/capabilities of a single tool",
+        "regex_hint": "(scrape|crawl|extract|read|write|edit|view|list|create|update|delete)"
+      },
+      "brand_tokens": ["--background-paper", "--primary-mid", "--accent-warm"],
+      "hyperframes": {
+        "blocks": ["app-showcase"],
+        "html_template": "templates/stack-recompose-cards.html",
+        "css_template": "templates/stack-recompose-cards.css",
+        "js_template": "templates/stack-recompose-cards.js"
+      },
+      "params": {
+        "card_count": {"type": "number", "default": 2, "description": "Number of cards in the stack (2-3)", "required": true},
+        "card_labels": {"type": "string", "description": "Comma-separated labels (e.g. 'Scrape,Crawl,Extract')", "required": true},
+        "tool_logo_path": {"type": "asset-path", "description": "Logo above the card stack", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "29.0-32.5s", "note": "Firecrawl Scrape → Crawl → Extract"}
+      ]
+    },
+    {
+      "id": "outro-stacked-words",
+      "name": "Outro stacked-words bridge",
+      "description": "Multiple words appear at staggered y-positions and varying type sizes ('how' / 'to turn this' / 'into'). Bridges from the layer-walkthrough into the CTA.",
+      "scene_type": "transition",
+      "unique_per_video": true,
+      "duration_s": [1.2, 2.0],
+      "position": {"constraint": "last-N-seconds", "value": 6.0},
+      "trigger": {
+        "script_signal": "speaker says a transitional phrase that frames the CTA — typically 'how to turn this into' or 'if you want to'",
+        "regex_hint": "(how to|if you want|here'?s how to)"
+      },
+      "brand_tokens": ["--anchor-near-black", "--primary-mid", "--background-paper"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/outro-stacked-words.html",
+        "css_template": "templates/outro-stacked-words.css",
+        "js_template": "templates/outro-stacked-words.js"
+      },
+      "params": {
+        "phrase": {"type": "string", "description": "The full phrase, will be word-split and staggered", "required": true},
+        "stagger_ms": {"type": "number", "default": 140, "description": "Delay between word entries", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "45.5-47.0s", "note": "'how' / 'to turn this' / 'into' staggered fall-in"}
+      ]
+    },
+    {
+      "id": "comment-cta-closer",
+      "name": "Comment-keyword CTA card",
+      "description": "Final 1.5-2.5s. Two-voice serif text — structural verb (Voice A dark-green) + a quoted keyword (Voice B sage italic). Speaker may smile underneath. Hold to the end of the reel.",
+      "scene_type": "cta",
+      "unique_per_video": true,
+      "duration_s": [1.5, 2.5],
+      "position": {"constraint": "last-N-seconds", "value": 3.0},
+      "trigger": {
+        "script_signal": "speaker explicitly asks viewer to comment a keyword to receive something (a doc, a course, a DM)",
+        "regex_hint": "(comment|drop|leave)\\s+['\"]?[A-Z][\\w\\s]*['\"]?"
+      },
+      "brand_tokens": ["--anchor-near-black", "--primary-mid"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/comment-cta-closer.html",
+        "css_template": "templates/comment-cta-closer.css",
+        "js_template": "templates/comment-cta-closer.js"
+      },
+      "params": {
+        "verb_text": {"type": "string", "default": "comment", "description": "Voice A — the action verb", "required": true},
+        "keyword_text": {"type": "string", "description": "Voice B — the quoted keyword (e.g. 'AI Stack', 'Vault')", "required": true}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "47.0-48.7s", "note": "'comment' + 'AI Stack' in serif quotes"},
+        {"reel": "DWcIFs7EVIh", "timestamp": "47.0-49.0s", "note": "'Comment' + 'Stack' on cream paper, no speaker shown"}
+      ]
+    },
+    {
+      "id": "caption-only-italic",
+      "name": "Italic-serif karaoke captions (default fallback)",
+      "description": "When no other pattern matches the beat, this is the safety net. Italic-serif white captions with single-emphasis-word color highlight (--primary-mid by default). Speaker stays on camera.",
+      "scene_type": "caption-only",
+      "unique_per_video": false,
+      "duration_s": [0.5, 8.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "fallback when no other pattern scores above 0.5 — used for connector beats, simple claims, transitions without dedicated patterns",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--primary-mid", "--background-paper"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/caption-only-italic.html",
+        "css_template": "templates/caption-only-italic.css",
+        "js_template": "templates/caption-only-italic.js"
+      },
+      "params": {
+        "emphasis_words": {"type": "string", "description": "Comma-separated list of words to highlight in --primary-mid (rest stay dim white)", "required": false}
+      },
+      "examples": [
+        {"reel": "DXhnRKxERkj", "timestamp": "various", "note": "Used as the cohesive caption layer running underneath all other patterns"}
+      ]
+    },
+    {
+      "id": "agent-terminal-pip",
+      "name": "Fake terminal with speaker PIP",
+      "description": "Full-frame fake terminal showing the agent working — typed prompt at top, streaming green-checkmark log lines below, occasional progress bar. Speaker shrinks to a chrome-corner picture-in-picture (~25% width, top-right or bottom-right). Used to demonstrate AI doing the actual work the speaker is describing.",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [4.0, 8.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker describes a tool/agent doing work autonomously — claims like 'AI cut the filler words', 'Claude wrote this code', 'the agent ran for X minutes'",
+        "regex_hint": "(AI|claude|agent|the (skill|tool))\\s+(did|cut|made|wrote|added|edited|chose|removed|generated|built)"
+      },
+      "brand_tokens": ["--anchor-near-black", "--background-paper", "--primary-mid", "--primary-light", "--accent-warm"],
+      "hyperframes": {
+        "blocks": ["app-showcase"],
+        "html_template": "templates/agent-terminal-pip.html",
+        "css_template": "templates/agent-terminal-pip.css",
+        "js_template": "templates/agent-terminal-pip.js"
+      },
+      "params": {
+        "prompt_text": {"type": "string", "description": "The fake user prompt typed at the top of the terminal (e.g. 'remove filler words and dead air')", "required": true},
+        "log_lines": {"type": "string", "description": "Newline-separated log lines streaming below the prompt (each prefixed with checkmark or arrow). Sage-light text on forest-near-black bg. Warm-orange flash on each line entry.", "required": true},
+        "pip_corner": {"type": "string", "default": "bottom-right", "description": "Where the speaker PIP sits: top-right | top-left | bottom-right | bottom-left", "required": false},
+        "pip_width_pct": {"type": "number", "default": 28, "description": "PIP width as % of frame", "required": false},
+        "waveform_strip": {"type": "boolean", "default": false, "description": "Optional: render a tiny audio-waveform strip across the bottom that 'redacts out' chunks in real-time as cuts land", "required": false}
+      },
+      "examples": [
+        {"reel": "Aw3BkmhYu4I", "timestamp": "0-12s of t=416 segment", "note": "Real terminal IDE reference — under modern brand, swap to --primary-mid and use Voice C mono (Geist Mono / Roboto Mono)."}
+      ]
+    },
+    {
+      "id": "concept-map-flowchart",
+      "name": "Hand-drawn cream-paper flowchart",
+      "description": "Cream paper backdrop with hand-drawn-feel arrows and pill-buttons. Steps draw on left-to-right (or top-to-bottom) as the speaker says each one. Italic-serif Voice B labels above each pill. The 'punchline' pill (the answer / the winning step) is colored --accent-warm while the rest are sage tones. Replaces sage-stack's numbered cascade for scripts that explain a workflow rather than enumerate items.",
+      "scene_type": "concept-demo",
+      "unique_per_video": true,
+      "duration_s": [4.0, 7.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker walks through a multi-step process or workflow — phrases like 'first I do X, then Y, then Z', 'the flow is', 'I just record, give it to the AI, and it does the rest'",
+        "regex_hint": "(first|then|next|after that|and then)\\s+(I|you|it|the)|workflow|the (process|flow|steps?)"
+      },
+      "brand_tokens": ["--background-paper", "--primary-light", "--primary-mid", "--primary-deep", "--accent-warm", "--anchor-near-black"],
+      "hyperframes": {
+        "blocks": ["flowchart"],
+        "html_template": "templates/concept-map-flowchart.html",
+        "css_template": "templates/concept-map-flowchart.css",
+        "js_template": "templates/concept-map-flowchart.js"
+      },
+      "params": {
+        "steps": {"type": "string", "description": "Comma-separated step labels in order (e.g. 'Phone Record,AI,Final Cut'). Each becomes a pill-button.", "required": true},
+        "punchline_index": {"type": "number", "description": "Which step (0-indexed) is the 'punchline' — that one gets --accent-warm instead of sage", "required": false, "default": 1},
+        "pill_labels_above": {"type": "string", "description": "Optional comma-separated italic-serif labels above each pill (Voice B emphasis), aligned 1:1 with steps. E.g. 'I record,one command,~5 minutes'", "required": false},
+        "arrow_easing": {"type": "string", "default": "expo.out", "description": "Easing for stroke-dashoffset arrow draw-on", "required": false}
+      },
+      "examples": [
+        {"reel": "Aw3BkmhYu4I", "timestamp": "12-39s of t=416 segment", "note": "Reference whiteboard canvas with mascot + buttons. Under modern brand, drop the mascot, replace cyan/oxblood/navy buttons with sage palette + warm-orange punchline."}
+      ]
+    },
+    {
+      "id": "prompt-chip-callout",
+      "name": "Monospace prompt-chip on cream backdrop",
+      "description": "Center-frame dark pill containing a monospace command typing in with cursor blink. Below it, a small italic-serif Voice B label names the meta-claim ('one command', 'natural language', 'just type'). When the typing finishes, a small green check fades in next to the pill and the cursor stops. Used to land the 'this is how easy it is' beat.",
+      "scene_type": "concept-demo",
+      "unique_per_video": true,
+      "duration_s": [3.0, 6.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker punches a 'one command' / 'just type X' / 'all I do is run X' claim — emphasizing the simplicity of invocation",
+        "regex_hint": "one\\s+(command|prompt|click)|just\\s+(type|run|say|tell)|(all|only)\\s+(I|you)\\s+(have to|need to)\\s+(do|type|run)"
+      },
+      "brand_tokens": ["--anchor-near-black", "--background-paper", "--primary-mid", "--primary-light"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/prompt-chip-callout.html",
+        "css_template": "templates/prompt-chip-callout.css",
+        "js_template": "templates/prompt-chip-callout.js"
+      },
+      "params": {
+        "command_text": {"type": "string", "description": "The monospace command rendered in the pill (e.g. 'claude edit my-video.mp4')", "required": true},
+        "eyebrow_label": {"type": "string", "default": "one command", "description": "Voice B italic-sage label below the pill", "required": false},
+        "type_speed_cps": {"type": "number", "default": 25, "description": "Characters per second for the typing animation", "required": false},
+        "show_check_at_end": {"type": "boolean", "default": true, "description": "Whether to fade in a sage-mid checkmark next to the pill when typing completes", "required": false},
+        "background_timeline_strip": {"type": "boolean", "default": false, "description": "Optional: faint timeline strip behind the pill showing raw clips collapsing into one continuous bar — the 'merged into final' visual", "required": false}
+      },
+      "examples": [
+        {"reel": "Aw3BkmhYu4I", "timestamp": "53-57s of t=416 segment", "note": "Reference: dark pill with 'make me an intro video' in monospace, cyan eyebrow 'NATURAL LANGUAGE'. Under modern brand, swap cyan eyebrow to --primary-mid italic-serif."}
+      ]
+    }
+  ],
+  "open_questions": [
+    "Should hook-cube-on-face be optional? Some sage-stack reels open without it (DWcIFs7EVIh skips the cube and goes straight to the cascade). May need a 'hook-cascade-direct' alt.",
+    "fake-ui-screen-mock is currently one big pattern — should it split into json-window / chat-prompt / sidebar-list as separate patterns? Each has different layout needs. Defer to v0.2.",
+    "Folder-tab section marker (used in the 'web data layer' beat of DXhnRKxERkj) is not yet a pattern. It only appeared once. Watch for second example before committing it as a pattern."
+  ]
+}
