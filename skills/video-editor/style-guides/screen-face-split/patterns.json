@@ -1,0 +1,310 @@
+{
+  "archetype_id": "screen-face-split",
+  "version": "0.1.0",
+  "version_date": "2026-04-25",
+  "description": "9:16 hard horizontal split: top half rotates between screen recording / bold-headline card / custom dashboard; bottom half is a continuous naturally-graded speaker. Bold-sans captions with single-word brand-accent emphasis. Hard cuts only — no whip-blurs. Workmanlike ad/tutorial register. Map source-reel creator colors to your own --primary-mid / --accent-warm.",
+  "duration_range_s": [30, 220],
+  "brand_spec": "../BRAND.md.example",
+  "style_decon": "./STYLE_DECON.md",
+  "fits_script_when": [
+    "script demos a tool live (Cursor, Claude Code, Notion, etc.) — live screen recording is essential",
+    "script is ad-style with a bold headline + product surface (promise → use-cases → CTA)",
+    "speaker needs to be the protagonist throughout, not a recessive narrator",
+    "topic is AI tooling / SaaS demo / agentic system / vibe-coding tutorial",
+    "ends with a comment or URL CTA where speaker fills the full frame",
+    "total duration is 30-220 seconds (ad-register short or long-form tutorial)",
+    "register is workmanlike — fast, substance-driven, not designed/premium"
+  ],
+  "does_not_fit_when": [
+    "script is essay or framework explanation with no live tool demo (use editorial-magazine)",
+    "script enumerates a list of design-rich concepts that need 3D chrome cards (use sage-stack)",
+    "no live tool demo, product UI, or headline-card surface to fill the top half",
+    "format calls for whip-blurs, light-leaks, or chromatic aberration (use sage-stack)",
+    "speaker should be desaturated / recessive (use sage-stack)",
+    "speaker is walking-and-talking outdoors (no archetype yet covers this)"
+  ],
+  "default_fallback_pattern_id": "caption-only-default",
+  "patterns": [
+    {
+      "id": "hard-split-mode-a-screen-rec",
+      "name": "Hard split — top: screen recording, bottom: speaker",
+      "description": "Top 50% is a real screen recording (Cursor, Claude Code, Airtable, GitHub, Notion, ChatGPT). Real cursor visible. Bottom 50% is the continuous naturally-graded speaker. Hard cut in/out — no transitions. The workhorse beat for tool demos.",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [3.0, 10.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker references a specific tool's UI, says 'look at this', 'I use [tool] to', or describes an action visible on a real screen recording",
+        "regex_hint": "(look at|here'?s|i use|let me show|watch this|notice|see how|in (cursor|claude code|notion|airtable|github|chatgpt|figma|obsidian))"
+      },
+      "brand_tokens": ["--anchor-near-black", "--background-paper"],
+      "hyperframes": {
+        "blocks": ["app-showcase", "grain-overlay"],
+        "html_template": "templates/hard-split-mode-a-screen-rec.html",
+        "css_template": "templates/hard-split-mode-a-screen-rec.css",
+        "js_template": "templates/hard-split-mode-a-screen-rec.js"
+      },
+      "params": {
+        "screen_rec_path": {"type": "asset-path", "description": "Path to the screen-recording mp4 / image. Flag as asset-needed if not provided.", "required": true},
+        "letterbox_color": {"type": "color-token", "default": "#000000", "description": "Color of any leftover top-half space when the screen rec doesn't fill it (defaults to pure black per archetype)", "required": false},
+        "rounded_corners": {"type": "boolean", "default": false, "description": "Add 18px border-radius + drop-shadow for floating-device feel (optional)", "required": false},
+        "split_ratio": {"type": "number", "default": 0.5, "description": "Top-half height as fraction of frame. 0.5 default; 0.52 / 0.55 also valid.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXh3_WRkrod", "timestamp": "various", "note": "Krause's Meta Ads stack — Airtable Grid View + GitHub repo as Mode A surfaces"},
+        {"reel": "DW8sYdqiPTR", "timestamp": "various", "note": "Long-form agentic-AI tutorial — heavy Mode A across 216s"},
+        {"reel": "DXe1B6Ij5hH", "timestamp": "2.0-6.0s, 22.0-30.0s, 38.0-45.0s", "note": "Lindy ad — inbox screenshot, calendar UI, Lindy.ai signup page"}
+      ]
+    },
+    {
+      "id": "hard-split-mode-b-bold-headline",
+      "name": "Hard split — top: bold-sans headline card, bottom: speaker",
+      "description": "Top 50% is a bold-sans headline on flat color (cream / off-white). Two-tone typography: ink (--anchor-near-black) + accent (--primary-mid default, --accent-warm for premium). Small-caps kicker subtitle above. Lands, holds 3-5s, hard cut. Used for hooks, promises, social-proof slabs.",
+      "scene_type": "claim",
+      "unique_per_video": false,
+      "duration_s": [2.5, 5.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker delivers a punchline, promise, headline number, or social-proof claim — a sentence that benefits from being read more than heard",
+        "regex_hint": "(save \\d+|automate(s)?|stop|why|how|the secret|\\d+(\\+|x|k|m)?\\s+(hours|teams|users|customers|reasons|things)|\\$\\d+)"
+      },
+      "brand_tokens": ["--anchor-near-black", "--primary-mid", "--accent-warm", "--background-paper"],
+      "hyperframes": {
+        "blocks": ["grain-overlay"],
+        "html_template": "templates/hard-split-mode-b-bold-headline.html",
+        "css_template": "templates/hard-split-mode-b-bold-headline.css",
+        "js_template": "templates/hard-split-mode-b-bold-headline.js"
+      },
+      "params": {
+        "kicker_text": {"type": "string", "description": "Small-caps subtitle in accent color. Letter-spaced 0.18em. Usually 2-4 words.", "required": true},
+        "ink_text": {"type": "string", "description": "Words in ink color (--anchor-near-black). The structural part of the headline.", "required": true},
+        "accent_text": {"type": "string", "description": "Words in accent color (the punchline word/phrase — number, verb, payoff)", "required": true},
+        "accent_token": {"type": "color-token", "default": "--primary-mid", "description": "Accent color token. Default --primary-mid; use --accent-warm for premium / urgency / money beats only.", "required": false},
+        "background_color": {"type": "string", "default": "#f0ece5", "description": "Headline-card background. Default warm-cream; off-white #f0eeea or pure white also valid.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXe1B6Ij5hH", "timestamp": "0.0-2.0s", "note": "'Save 60 Hours & $2,400' on cream — gold accent under Lindy brand (under your brand becomes --accent-warm)"},
+        {"reel": "DXe1B6Ij5hH", "timestamp": "6.0-10.0s", "note": "'Lindy automates the boring stuff' — ink + gold split"},
+        {"reel": "DXe1B6Ij5hH", "timestamp": "30.0-38.0s", "note": "Social-proof '10,000+ teams' headline slab"}
+      ]
+    },
+    {
+      "id": "hard-split-mode-c-dashboard",
+      "name": "Hard split — top: custom dashboard / diagram, bottom: speaker",
+      "description": "Top 50% is a custom-rendered metric dashboard / flowchart / message-bubble UI on dark charcoal (#0a0e14). One accent-color line stroke or chart curve with a subtle drop-shadow glow in the brand accent. Used to demonstrate WHAT a system does without needing a real screen recording.",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [4.0, 10.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "speaker explains a system, flow, or metric — references concepts like 'agentic OS', 'pipeline', 'flowchart', 'this graph', 'cumulative', or describes architecture/automation visually",
+        "regex_hint": "(dashboard|flow|chart|graph|metric|pipeline|architecture|system|agent(ic)?|automation|integration|response|trigger)"
+      },
+      "brand_tokens": ["--primary-mid", "--accent-warm", "--anchor-near-black", "--primary-light"],
+      "hyperframes": {
+        "blocks": ["data-chart", "flowchart", "grain-overlay"],
+        "html_template": "templates/hard-split-mode-c-dashboard.html",
+        "css_template": "templates/hard-split-mode-c-dashboard.css",
+        "js_template": "templates/hard-split-mode-c-dashboard.js"
+      },
+      "params": {
+        "dashboard_type": {"type": "string", "default": "line-chart", "description": "line-chart | flowchart | message-bubble | system-diagram | metric-card", "required": true},
+        "header_text": {"type": "string", "description": "Top-line caps label (e.g. 'AGENTIC OS · CUMULATIVE ACTIVITY · 30D')", "required": true},
+        "stat_pairs": {"type": "string", "description": "Comma-separated stat pairs for the stats row (e.g. '113 TOTAL, 113 LAST 30D'). Optional.", "required": false},
+        "accent_token": {"type": "color-token", "default": "--primary-mid", "description": "Stroke / glow color for the chart line or flowchart edges. Default --primary-mid; --accent-warm for premium beats.", "required": false},
+        "integration_tags": {"type": "string", "description": "Comma-separated mono-font tags for the footer (e.g. 'GITHUB, GMAIL, GOOGLE DRIVE'). Optional.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXauOnRNn_k", "timestamp": "various", "note": "Carpathia Agentic OS — orange line chart on dark charcoal with integration tags"},
+        {"reel": "DXe1B6Ij5hH", "timestamp": "10.0-14.0s", "note": "Lindy lead-enrich — message bubble + LinkedIn panel on peach gradient"},
+        {"reel": "DXe1B6Ij5hH", "timestamp": "14.0-22.0s", "note": "Lindy email-triage flowchart"},
+        {"reel": "DW8sYdqiPTR", "timestamp": "various", "note": "Dark teal Agent flowchart + n8n-style automation graph"}
+      ]
+    },
+    {
+      "id": "floating-overlay-variant",
+      "name": "Floating B-roll card overlay (sub-pattern, limited references)",
+      "description": "Sub-pattern variant: speaker fills the full frame; B-roll cards (screen recording / headline card / dashboard) float as an overlay over the upper portion of the frame instead of taking a hard 50% split. Same naturally-graded speaker, same caption system. Single source example so far — flagged as a sub-pattern that may split into its own archetype if more examples emerge.",
+      "scene_type": "concept-demo",
+      "unique_per_video": false,
+      "duration_s": [3.0, 8.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "format demands the speaker stay full-frame for connection while still showing a tool / surface — the intimacy of full-screen face combined with the demonstration of Mode A/B/C content",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--anchor-near-black", "--background-paper", "--primary-mid"],
+      "hyperframes": {
+        "blocks": ["app-showcase", "grain-overlay"],
+        "html_template": "templates/floating-overlay-variant.html",
+        "css_template": "templates/floating-overlay-variant.css",
+        "js_template": "templates/floating-overlay-variant.js"
+      },
+      "params": {
+        "overlay_asset": {"type": "asset-path", "description": "Path to the B-roll asset to float over the upper frame", "required": true},
+        "overlay_y_pct": {"type": "number", "default": 8, "description": "Top offset as % of frame height for the overlay card", "required": false},
+        "overlay_height_pct": {"type": "number", "default": 38, "description": "Height of overlay card as % of frame height (smaller than 50% so speaker remains the spine)", "required": false},
+        "overlay_shadow": {"type": "boolean", "default": true, "description": "Soft drop shadow under the overlay to lift it off the speaker plate", "required": false}
+      },
+      "examples": [
+        {"reel": "DXU4sroztsS", "timestamp": "various", "note": "ONLY current source example — speaker is full-frame, B-roll cards float over the upper frame as overlays. Watch for second example before promoting this from sub-pattern to first-class."}
+      ]
+    },
+    {
+      "id": "bold-sans-emphasis-caption",
+      "name": "Bold-sans caption with single-word brand-accent emphasis (THE signature)",
+      "description": "The signature move of this archetype. Bold sans-serif captions (Inter Black, Geist Black, ≥800 weight) sitting at y=65-75% in the speaker half. White words + ONE word per group in brand accent. Tight letter-spacing (-0.015em), heavy text-shadow for legibility. Pill / stroke / plain backdrop variants. The accent_token is set ONCE per reel — never switch mid-reel.",
+      "scene_type": "caption-only",
+      "unique_per_video": false,
+      "duration_s": [0.4, 8.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "any spoken word group during a Mode A / B / C beat — captions tick forward at speaker's syllable pace, 1-3 words per group, with one emphasis word per group (usually the noun, verb, brand name, or number)",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--primary-mid", "--accent-warm", "--anchor-near-black"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/bold-sans-emphasis-caption.html",
+        "css_template": "templates/bold-sans-emphasis-caption.css",
+        "js_template": "templates/bold-sans-emphasis-caption.js"
+      },
+      "params": {
+        "word_groups": {"type": "string", "description": "JSON array of {text, start_s, end_s, emphasis_index} objects — one per caption group; emphasis_index points to which word in the group gets accent color", "required": true},
+        "accent_token": {"type": "color-token", "default": "--primary-mid", "description": "Per-reel accent color. Default --primary-mid; --accent-warm for entire reel only when topic is premium / urgency / money. Avoid the source-reel creator-coded colors. Set ONCE per reel — never switch mid-reel.", "required": true},
+        "font_family": {"type": "string", "default": "Inter", "description": "Heavy sans family. Inter Black, Geist Black, SF Pro Display Heavy. Weight must be ≥800.", "required": false},
+        "backdrop_variant": {"type": "string", "default": "plain", "description": "plain (text-shadow only) | pill (rgba(20,20,20,.82) rounded-pill bg) | stroke (6px black -webkit-text-stroke for busy backgrounds)", "required": false},
+        "y_position_pct": {"type": "number", "default": 68, "description": "Vertical caption position as % of frame height. 65-75% = mid-torso of speaker.", "required": false},
+        "font_size_px": {"type": "number", "default": 84, "description": "Caption font size at 1080px width. 64-96px range.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXh3_WRkrod", "timestamp": "various", "note": "Plain backdrop variant — cyan emphasis under Krause brand (becomes --primary-mid under your brand)"},
+        {"reel": "DW8sYdqiPTR", "timestamp": "various", "note": "Stroke variant — 6px black outline around cyan-emphasis caps captions"},
+        {"reel": "DXe1B6Ij5hH", "timestamp": "2.0-6.0s", "note": "Pill variant — 'drowning in emails' with **emails** in gold (becomes --accent-warm under your brand for premium beats)"},
+        {"reel": "DXauOnRNn_k", "timestamp": "various", "note": "Hot red emphasis under Carpathia brand (becomes --primary-mid or --accent-warm under your brand, never red)"}
+      ]
+    },
+    {
+      "id": "word-level-reveal-animation",
+      "name": "Word-by-word caption reveal with emphasis pulse",
+      "description": "Animation layer for bold-sans-emphasis-caption. Each word group ticks forward at 0.4-0.8s pace; per-word opacity snap-on (no ease, captions are diegetic). The emphasis word gets a 0.18s scale-pulse (1.18 → 1.0, power3.out) the instant it appears — the secret-sauce micro-animation that reads as *emphasis* rather than animation.",
+      "scene_type": "caption-only",
+      "unique_per_video": false,
+      "duration_s": [0.4, 0.8],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "fires alongside every bold-sans-emphasis-caption group — this is the motion behavior, not a standalone scene",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--primary-mid", "--accent-warm"],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/word-level-reveal-animation.html",
+        "css_template": "templates/word-level-reveal-animation.css",
+        "js_template": "templates/word-level-reveal-animation.js"
+      },
+      "params": {
+        "word_pace_s": {"type": "number", "default": 0.6, "description": "Average duration per word group in seconds. 0.4-0.8s range matches normal speech pacing.", "required": false},
+        "emphasis_pulse_scale": {"type": "number", "default": 1.18, "description": "Starting scale for the emphasis-word pulse before settling to 1.0", "required": false},
+        "emphasis_pulse_duration_s": {"type": "number", "default": 0.18, "description": "Duration of the scale-pulse settle (power3.out)", "required": false},
+        "reveal_ease": {"type": "string", "default": "none", "description": "Easing for word-opacity reveal. Default 'none' (snap-on). Captions are diegetic, not animated.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXe1B6Ij5hH", "timestamp": "various", "note": "Word groups ticking ~0.6s, emphasis word punching with scale pulse on appearance"},
+        {"reel": "DW8sYdqiPTR", "timestamp": "various", "note": "Slightly faster pacing for 216s tutorial — closer to 0.4-0.5s per group"}
+      ]
+    },
+    {
+      "id": "hard-cut-transition",
+      "name": "Hard cut between top-half scenes (anti-pattern marker)",
+      "description": "The format prescribes the *absence* of fancy transitions. Top-half mode swaps via instant visibility flip — `gsap.set(prev, { autoAlpha: 0 })` and `gsap.set(next, { autoAlpha: 1 })` at the cut frame. Optional 80ms cross-fade for related top-half scenes (e.g. scrolling Airtable → zoomed Airtable detail). NEVER whip-blur, glitch, light-leak, or chromatic aberration — those break the workmanlike register and belong to other archetypes.",
+      "scene_type": "transition",
+      "unique_per_video": false,
+      "duration_s": [0.0, 0.1],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "scene cut between two top-half beats — used by default 95% of the time in this archetype",
+        "regex_hint": null
+      },
+      "brand_tokens": [],
+      "hyperframes": {
+        "blocks": [],
+        "html_template": "templates/hard-cut-transition.html",
+        "css_template": "templates/hard-cut-transition.css",
+        "js_template": "templates/hard-cut-transition.js"
+      },
+      "params": {
+        "variant": {"type": "string", "default": "hard-cut", "description": "hard-cut (instant, default ~95%) | cross-fade-80ms (linear cross-fade for related scenes)", "required": false}
+      },
+      "examples": [
+        {"reel": "DXe1B6Ij5hH", "timestamp": "every top-half mode change", "note": "Lindy ad — every top-half swap is a hard cut. Speaker stays continuous."},
+        {"reel": "DXh3_WRkrod", "timestamp": "various", "note": "Same — hard cuts on Mode A → Mode A scrolling-detail transitions"}
+      ]
+    },
+    {
+      "id": "full-screen-speaker-cta",
+      "name": "Full-screen speaker close (CTA / climax beat)",
+      "description": "Final beat: top half drops away (slides up off-screen), speaker video scales the wrapper from 50% → 100% height. Tight head-and-shoulders crop fills the frame. Speaker delivers the engagement instruction (comment X, sign up at URL, trust me on this). Caption is short, no color emphasis — the face IS the emphasis. Hold 1.5-3s to the end of the reel.",
+      "scene_type": "cta",
+      "unique_per_video": true,
+      "duration_s": [1.5, 3.0],
+      "position": {"constraint": "last-N-seconds", "value": 3.5},
+      "trigger": {
+        "script_signal": "speaker delivers an engagement instruction — comment, follow, save, sign up, go to [URL]. Often phrased 'just comment', 'follow for more', 'sign up at', 'trust me on this'.",
+        "regex_hint": "(comment|follow|save this|sign up|go to|drop a|leave a|trust me|just|click)"
+      },
+      "brand_tokens": ["--anchor-near-black", "--background-paper"],
+      "hyperframes": {
+        "blocks": ["logo-outro"],
+        "html_template": "templates/full-screen-speaker-cta.html",
+        "css_template": "templates/full-screen-speaker-cta.css",
+        "js_template": "templates/full-screen-speaker-cta.js"
+      },
+      "params": {
+        "transition_duration_s": {"type": "number", "default": 0.4, "description": "Duration of the top-half-drop animation (power3.in)", "required": false},
+        "cta_text": {"type": "string", "description": "Caption text shown over the full-screen speaker. Short — usually 2-4 words. No color emphasis.", "required": true},
+        "speaker_crop": {"type": "string", "default": "head-and-shoulders", "description": "Framing for the full-screen view. head-and-shoulders is tightest; chest-up if speaker prefers more breathing room.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXe1B6Ij5hH", "timestamp": "45.0-47.0s", "note": "'just comment' — top half drops, speaker fills frame for the close"},
+        {"reel": "DXauOnRNn_k", "timestamp": "various", "note": "Carpathia 'look me in the eye' close — full-screen speaker for the engagement ask"}
+      ]
+    },
+    {
+      "id": "caption-only-default",
+      "name": "Caption-only fallback (no top-half graphic)",
+      "description": "Safety-net pattern. When no other pattern matches a beat, this fires: plain bold-sans white captions with single-word --primary-mid emphasis sit over the speaker, no top-half graphic. Used for connector beats, simple claims, transitions without dedicated patterns. The speaker fills the full frame OR the top half goes pure black.",
+      "scene_type": "caption-only",
+      "unique_per_video": false,
+      "duration_s": [0.5, 8.0],
+      "position": {"constraint": "anywhere"},
+      "trigger": {
+        "script_signal": "fallback when no other pattern scores above 0.5",
+        "regex_hint": null
+      },
+      "brand_tokens": ["--primary-mid", "--accent-warm", "--anchor-near-black"],
+      "hyperframes": {
+        "blocks": ["grain-overlay"],
+        "html_template": "templates/caption-only-default.html",
+        "css_template": "templates/caption-only-default.css",
+        "js_template": "templates/caption-only-default.js"
+      },
+      "params": {
+        "fallback_mode": {"type": "string", "default": "black-top-half", "description": "black-top-half (top half goes #000, captions over speaker bottom half) | full-frame-speaker (top half drops, speaker fills frame, captions at y=68%)", "required": false},
+        "emphasis_words": {"type": "string", "description": "Comma-separated list of words to highlight in --primary-mid (the rest stay white)", "required": false},
+        "accent_token": {"type": "color-token", "default": "--primary-mid", "description": "Accent color for emphasis word. Inherits the reel-level --accent.", "required": false}
+      },
+      "examples": [
+        {"reel": "DXh3_WRkrod", "timestamp": "various", "note": "Used as the cohesive caption layer running underneath all top-half cuts"},
+        {"reel": "DW8sYdqiPTR", "timestamp": "various", "note": "Long stretches of plain captions over speaker between Mode A/B/C beats"}
+      ]
+    }
+  ],
+  "open_questions": [
+    "floating-overlay-variant has only ONE source example. If it appears in 2+ more reels, promote it from sub-pattern to its own archetype (`speaker-overlay`) — the geometry is meaningfully different (no hard split).",
+    "Should hard-split-mode-a/b/c be ONE pattern with a `mode` param instead of three? Argued for split because each mode has materially different params and triggers cleanly off different script signals. Revisit if patterns.json grows unwieldy.",
+    "word-level-reveal-animation could fold into bold-sans-emphasis-caption since they always co-fire. Kept separate for now to make the motion behavior reusable.",
+    "Caption backdrop variant (plain / pill / stroke) — observed three variants but no clear rule for when to pick which. Hypothesis: pill works on light backgrounds, stroke works on busy backgrounds, plain works on plain dark. Need more samples to confirm.",
+    "Mode-B headline-card duration felt 3-5s but might be as short as 2s on faster-register reels. The current 2.5-5.0s range may need narrowing to 3-5s after frame-accurate timeline data lands."
+  ]
+}
