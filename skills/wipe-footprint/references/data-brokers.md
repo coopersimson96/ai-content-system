@@ -1,9 +1,9 @@
 # Data Broker / People-Search Opt-Out Registry
 
 The major US people-search brokers list nearly everyone. Include the HIGH-priority ones in every
-US kit by default. Opt-out URLs change — if one 404s, search "{broker} opt out" for the live page.
+US kit by default. Opt-out URLs change, if one 404s, search "{broker} opt out" for the live page.
 
-## Tier 1 — highest priority (expose home address + phone, highest traffic)
+## Tier 1, highest priority (expose home address + phone, highest traffic)
 
 | Broker | Opt-out URL | Method | Notes |
 |--------|-------------|--------|-------|
@@ -20,7 +20,7 @@ US kit by default. Opt-out URLs change — if one 404s, search "{broker} opt out
 | PeopleFinders | https://www.peoplefinders.com/opt-out | Web form | |
 | US Search | https://www.ussearch.com/opt-out/ | Web form | |
 
-## Tier 2 — large aggregators / marketing data
+## Tier 2, large aggregators / marketing data
 
 | Broker | Opt-out URL | Method | Notes |
 |--------|-------------|--------|-------|
@@ -43,5 +43,5 @@ US kit by default. Opt-out URLs change — if one 404s, search "{broker} opt out
 
 ## Paid done-for-you alternatives (mention only if asked)
 
-DeleteMe (joindeleteme.com), Optery (optery.com), OneRep (onerep.com) — these auto-submit to
+DeleteMe (joindeleteme.com), Optery (optery.com), OneRep (onerep.com), these auto-submit to
 dozens of brokers on a subscription. Useful for people who don't want to DIY. Not required.

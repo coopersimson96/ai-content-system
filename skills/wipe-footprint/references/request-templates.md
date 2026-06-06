@@ -39,7 +39,7 @@ Regards,
 ## GDPR erasure (EU/UK)
 
 ```
-Subject: GDPR Article 17 Request — Erasure of Personal Data
+Subject: GDPR Article 17 Request, Erasure of Personal Data
 
 To {broker name} Data Protection Officer,
 

@@ -1,12 +1,12 @@
-# wipe-footprint skill — optional config
+# wipe-footprint skill, optional config
 # Copy what you need into your ~/.zshrc or ~/.bashrc, then restart your shell.
 # The skill runs without any of these (it falls back to Claude's built-in web search),
 # but they make it faster and more thorough.
 
-# Firecrawl — stronger recon of where your data is exposed.
+# Firecrawl, stronger recon of where your data is exposed.
 # Get a free key at https://firecrawl.dev
 export FIRECRAWL_API_KEY="fc-your-key-here"
 
-# Have I Been Pwned — automatic breach checking for your email.
+# Have I Been Pwned, automatic breach checking for your email.
 # Get a key at https://haveibeenpwned.com/API/Key
 export HIBP_API_KEY="your-hibp-key-here"

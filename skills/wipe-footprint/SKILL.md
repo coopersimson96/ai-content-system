@@ -10,7 +10,7 @@ description: >
   data", "remove my data from data brokers", "stop the spam calls", "opt me out of data brokers".
 ---
 
-# Wipe Footprint — One-Prompt Digital Footprint Removal
+# Wipe Footprint, One-Prompt Digital Footprint Removal
 
 Turn a single prompt into a complete data-removal kit. The user gives their details once;
 this skill does the searching, the categorizing, and writes every legal removal request for
@@ -48,7 +48,7 @@ exposures. Do not log it anywhere else.
 
 ---
 
-## Step 1: Recon — find what's exposed (automated)
+## Step 1: Recon, find what's exposed (automated)
 
 Run these in parallel where possible. Use the `firecrawl` CLI (preferred) or WebSearch.
 
@@ -56,7 +56,7 @@ Run these in parallel where possible. Use the `firecrawl` CLI (preferred) or Web
    with the phone number and with the email. Capture any result that exposes personal info.
 2. **Targeted broker sweep:** for each broker in `references/data-brokers.md`, assume the major
    people-search brokers (Spokeo, Whitepages, BeenVerified, MyLife, Radaris, TruePeopleSearch,
-   FastPeopleSearch, Intelius, PeopleFinders, etc.) list nearly everyone in the US — include them
+   FastPeopleSearch, Intelius, PeopleFinders, etc.) list nearly everyone in the US, include them
    in the kit by default unless the user is non-US. Optionally confirm with a quick
    `firecrawl search "{name} {city} site:{broker_domain}"`.
 3. **Breach check:** if `HIBP_API_KEY` is set in the environment, query
@@ -123,7 +123,7 @@ opt-out link, (3) breach triage, (4) suppression plan, (5) a "dead accounts" poi
 JustDeleteMe.xyz. Then, unless `CLAUDE_HEADLESS=1` is set, `open` the file so the user sees it.
 
 Tell the user the headline result, e.g. "Found you on 14 data brokers + 3 breaches. Wrote 14
-removal requests, ranked by risk. Open the kit and work top to bottom — most take 60 seconds each."
+removal requests, ranked by risk. Open the kit and work top to bottom, most take 60 seconds each."
 
 ---
 
@@ -132,7 +132,7 @@ removal requests, ranked by risk. Open the kit and work top to bottom — most t
 Only if the user explicitly asks ("open them for me" / "do it automatically"):
 use the claude-in-chrome MCP to open each broker's opt-out page and pre-fill the form fields.
 **Warn first** that CAPTCHAs and email confirmations still require them, and that you'll go one
-at a time. Never attempt to bypass a CAPTCHA. This mode is best-effort and brittle by nature —
+at a time. Never attempt to bypass a CAPTCHA. This mode is best-effort and brittle by nature -
 default to the reliable Step 6 kit unless they ask for this.
 
 ---

@@ -3,13 +3,13 @@
 A Claude Code skill that wipes your digital footprint in one prompt. It finds where your
 personal data (home address, phone, email, relatives) is exposed across data brokers and
 people-search sites, ranks everything by risk, and **auto-writes every CCPA/GDPR opt-out and
-deletion request** — filled in and ready to send — then saves it all as a personal removal kit.
+deletion request**, filled in and ready to send, then saves it all as a personal removal kit.
 
 It does for free what paid services like Incogni or DeleteMe charge you monthly for.
 
 > **What it does NOT do:** auto-submit forms. Most brokers require a CAPTCHA or an email
 > confirmation that a human has to complete. The skill gets you to the "just click submit" line
-> for every site. Opting out also reduces spam over time — it doesn't kill 100% of it, and
+> for every site. Opting out also reduces spam over time, it doesn't kill 100% of it, and
 > brokers can re-list you, so it's worth re-running every few months.
 
 ---
@@ -23,7 +23,7 @@ It does for free what paid services like Incogni or DeleteMe charge you monthly 
 | **Have I Been Pwned API key** | Optional | Auto-checks which breaches your email is in. Without it, the skill just points you to the site to check manually. |
 | **Chrome (claude-in-chrome)** | Optional | "Auto-fill" mode that opens each opt-out page and pre-fills it. Off by default. |
 
-You can run the whole skill on Claude Code alone — everything else just makes it faster.
+You can run the whole skill on Claude Code alone, everything else just makes it faster.
 
 ---
 
@@ -63,7 +63,7 @@ For automatic breach checking, get a key at
 export HIBP_API_KEY="your-hibp-key"
 ```
 
-Without it, the skill simply tells you to check the site yourself — everything else still works.
+Without it, the skill simply tells you to check the site yourself, everything else still works.
 
 See `config-templates/wipe-footprint-env.example` in this repo for a copy-paste env file.
 
@@ -93,7 +93,7 @@ Then you just work down the list and paste each request into the broker's opt-ou
 /wipe-footprint demo
 ```
 
-Runs the fastest visible path (one real search + a few filled requests) in about 90 seconds —
+Runs the fastest visible path (one real search + a few filled requests) in about 90 seconds -
 handy for screen recordings.
 
 ### Auto-fill mode (advanced)
@@ -115,4 +115,4 @@ wipe-footprint/
     └── request-templates.md       # CCPA / GDPR / account-deletion letter templates
 ```
 
-Opt-out URLs change over time — if a link 404s, search "[broker name] opt out" for the current page.
+Opt-out URLs change over time, if a link 404s, search "[broker name] opt out" for the current page.
