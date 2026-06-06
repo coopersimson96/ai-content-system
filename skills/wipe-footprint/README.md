@@ -96,11 +96,18 @@ Then you just work down the list and paste each request into the broker's opt-ou
 Runs the fastest visible path (one real search + a few filled requests) in about 90 seconds -
 handy for screen recordings.
 
-### Auto-fill mode (advanced)
+### Auto-remove mode (send the requests for you)
 
-Once you have the kit, you can say *"open them for me"* and, if Chrome is connected, the skill
-will open each opt-out page and pre-fill it. You still solve any CAPTCHA / email confirmation
-yourself.
+Say *"do it for me"* or *"send them all"* and the skill stops just drafting and starts
+submitting: it emails the brokers that accept email, and (with Chrome connected via
+claude-in-chrome) opens each web-form broker's opt-out page, fills it, and submits. It pauses
+only when a broker throws a CAPTCHA or a "confirm via email" step, tells you the one click to
+make, then continues. It reports a clean tally at the end (sent / submitted / needs-you).
+
+Heads up: removal isn't instant (brokers take days to weeks and can re-list you), and a few
+steps legally need a human click, so it's *mostly* hands-off, not 100%. Re-run it every quarter
+to stay clean. Needs an email tool and/or Chrome connected; without them it falls back to handing
+you the filled requests and links.
 
 ---
 

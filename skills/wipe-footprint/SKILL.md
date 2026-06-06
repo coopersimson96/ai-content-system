@@ -127,13 +127,32 @@ removal requests, ranked by risk. Open the kit and work top to bottom, most take
 
 ---
 
-## Step 7 (optional, advanced): Browser auto-fill mode
+## Step 7: Auto-remove mode (actually send the requests)
 
-Only if the user explicitly asks ("open them for me" / "do it automatically"):
-use the claude-in-chrome MCP to open each broker's opt-out page and pre-fill the form fields.
-**Warn first** that CAPTCHAs and email confirmations still require them, and that you'll go one
-at a time. Never attempt to bypass a CAPTCHA. This mode is best-effort and brittle by nature -
-default to the reliable Step 6 kit unless they ask for this.
+When the user wants it hands-off ("do it for me", "send them all", "auto", or runs the skill
+with an `auto` arg), don't just draft, SUBMIT. Work down the ranked kit, highest risk first, and
+for each broker pick the path that matches how that broker actually accepts removals:
+
+1. **Email-method brokers** (the broker's registry entry has an `opt_out_email`, or its opt-out
+   page says to email a privacy address): send the filled CCPA/GDPR request from the user's
+   connected email tool. Use whatever is available, in this order: the `gws` Gmail CLI, a
+   connected email MCP, or SMTP creds in env. Log it as SENT.
+2. **Form-method brokers** (most people-search sites): open the broker's opt-out page with the
+   claude-in-chrome MCP, fill the form with the user's details, and submit it. Log as SUBMITTED.
+3. **Human-gated steps:** when a broker hits a CAPTCHA or a "confirm via email" click, STOP on
+   that one, tell the user the single action to take, wait, then continue to the next broker.
+   Log as NEEDS-YOU. Never attempt to bypass a CAPTCHA.
+
+**Honesty rule for this mode:** report a clean tally at the end, e.g. "Sent 6 by email, submitted
+5 forms, 3 need one click from you (CAPTCHA / email confirmation), listed below." NEVER mark a
+broker done while it's still waiting on a human step. Removal is not instant, brokers take days
+to weeks to process and can re-list you, so tell the user to re-run this every quarter to stay
+clean. (Scheduling is the user's call, just surface that it's worth repeating.)
+
+**Requirements + graceful fallback:** auto-remove needs an email tool (for email-method brokers)
+and Chrome connected via claude-in-chrome (for form-method brokers). If neither is available,
+say so plainly and fall back to Step 6, hand the user the filled requests + direct opt-out links
+to submit themselves. Do not pretend to have sent something you couldn't.
 
 ---
 
@@ -151,5 +170,5 @@ This produces a real, filmable result in under ~90 seconds without working the f
 ## What to report at the end
 
 A tight summary: how many brokers + breaches found, how many requests written, where the kit is
-saved, and the single next action ("open the kit, start at #1"). Offer the browser auto-fill mode
+saved, and the single next action ("open the kit, start at #1"). Offer the auto-remove mode (Step 7)
 and the suppression plan as follow-ups.
