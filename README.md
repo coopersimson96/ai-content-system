@@ -13,6 +13,7 @@ A complete AI-powered content creation system built on Claude Code. 69 skills ac
 | Blog | 13 | Blog writing, rewriting, analysis, strategy, calendars, schema, repurposing |
 | Image Gen & Design | 2 | AI image generation, frontend design |
 | E-commerce | 2 | CRO expertise, Shopify store design |
+| Privacy | 1 | Wipe your digital footprint — find, delete, and bury your personal data across data brokers |
 
 ## Quick Start
 
@@ -56,6 +57,7 @@ Most skills work out of the box. For full functionality, connect these integrati
 | Google Docs/Drive | Script export, PDF hosting | See Whop guide: Module 1.3 |
 | Supadata API | Video transcript extraction | See Whop guide: Module 1.4 |
 | Gemini API | Image generation | See Whop guide: Module 1.5 |
+| Firecrawl + HIBP (optional) | `wipe-footprint` recon + breach check | See `skills/wipe-footprint/README.md` |
 
 Config templates are in `config-templates/`.
 

@@ -2,6 +2,11 @@
 
 All notable changes to the AI Content System will be documented in this file.
 
+## [1.3.0] - 2026-06-06
+
+### Added
+- **`wipe-footprint`** - One-prompt digital footprint removal. Finds where your personal data (home address, phone, email, relatives) is exposed across data brokers and people-search sites, ranks everything by risk, and auto-writes every CCPA/GDPR opt-out and deletion request, filled in and ready to send, then saves a personal removal kit. Does for free what paid services like Incogni charge monthly for. Runs on Claude Code + built-in web search; Firecrawl (recon) and a Have I Been Pwned key (breach check) are optional enhancements. Ships with a 20+ broker opt-out registry, CCPA/GDPR/account-deletion templates, a per-skill README, and `config-templates/wipe-footprint-env.example`.
+
 ## [1.2.0] - 2026-05-04
 
 ### Added
